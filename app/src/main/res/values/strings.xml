@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">BakingProject</string>
+    <string name="app_name">Baking Project</string>
+    <string name="main_activity_title">Baking Time</string>
+    <string name="error_message_1">Failed to get recipes</string>
+    <string name="error_message_2">Try again</string>
 
 </resources>
