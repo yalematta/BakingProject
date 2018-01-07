@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F50057</color>
-    <color name="colorPrimaryDark">#F50057</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#e56961</color>
+    <color name="colorPrimaryDark">#ae3937</color>
+    <color name="colorPrimaryLight">#ff9a8f</color>
+    <color name="colorAccent">#ae3937</color>
 
-    <color name="recipe_title">#000</color>
     <color name="viewBg">#f1f5f8</color>
+    <color name="recipe_title">#000</color>
+    <color name="ingredient_separator">#808080</color>
+
 </resources>

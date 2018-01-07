@@ -2,6 +2,7 @@ package com.yalematta.android.bakingproject.Adapters;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yalematta.android.bakingproject.Models.Recipe;
 import com.yalematta.android.bakingproject.R;
+import com.yalematta.android.bakingproject.Views.RecipesFragment;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     final private ListRecipeClickListener mOnClickListener;
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public CardView cardView;
         public TextView title, count;
         public ImageView thumbnail, overflow;
 
@@ -33,9 +36,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             count = (TextView) view.findViewById(R.id.count);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             overflow = (ImageView) view.findViewById(R.id.overflow);
-            view.setOnClickListener(this);
+            cardView = (CardView) view.findViewById(R.id.card_view);
+            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+
+            cardView.setOnClickListener(this);
         }
 
         @Override
@@ -71,7 +76,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO: Add this feature
             }
         });
     }
@@ -82,10 +87,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     }
 
     public interface ListRecipeClickListener {
-        void onListRecipeClick (int clickedRecipeIndex);
+        void onListRecipeClick(int clickedRecipeIndex);
 
+        /* Save and Restore RecyclerView Scroll Position */
         Parcelable onSaveInstanceState();
-
         void onRestoreInstanceState(Parcelable state);
+
     }
 }
