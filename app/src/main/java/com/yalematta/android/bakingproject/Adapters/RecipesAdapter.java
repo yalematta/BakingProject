@@ -92,6 +92,5 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         /* Save and Restore RecyclerView Scroll Position */
         Parcelable onSaveInstanceState();
         void onRestoreInstanceState(Parcelable state);
-
     }
 }
