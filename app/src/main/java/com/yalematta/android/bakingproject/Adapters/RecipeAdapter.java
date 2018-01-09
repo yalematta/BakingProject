@@ -1,6 +1,7 @@
 package com.yalematta.android.bakingproject.Adapters;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,14 +25,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private Context mContext;
     private int ingredientsCount;
     private Map<Integer, Object> map;
+    private static RecipeAdapter.ListStepClickListener mOnClickListener;
 
     private final static int HEADER_VIEW = 1;
     private final static int INGREDIENT_VIEW = 2;
     private final static int STEP_VIEW = 3;
 
-    public RecipeAdapter(Context mContext, int ingredientsCount, Map<Integer, Object> map) {
+    public RecipeAdapter(Context mContext, int ingredientsCount, Map<Integer, Object> map, ListStepClickListener listener) {
         this.map = map;
         this.mContext = mContext;
+        this.mOnClickListener = listener;
         this.ingredientsCount = ingredientsCount;
     }
 
@@ -120,12 +123,24 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public static class StepViewHolder extends RecyclerView.ViewHolder {
+    public static class StepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle;
 
         public StepViewHolder(View itemView) {
             super(itemView);
             mTitle = (TextView) itemView.findViewById(R.id.tvStepShortDescription);
+
+            mTitle.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListStepClick(clickedPosition);
+        }
+    }
+
+    public interface ListStepClickListener {
+        void onListStepClick(int clickedRecipeIndex);
     }
 }

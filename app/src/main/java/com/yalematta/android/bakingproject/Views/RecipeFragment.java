@@ -1,6 +1,7 @@
 package com.yalematta.android.bakingproject.Views;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,9 +28,10 @@ import java.util.Map;
  * Created by yalematta on 1/7/18.
  */
 
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener {
 
     private TextView tvErrorMessage1, tvErrorMessage2;
+    private Map<Integer, Object> map;
     private ProgressBar pbIndicator;
     private RecyclerView rvRecipe;
     private RecipeAdapter adapter;
@@ -55,8 +57,7 @@ public class RecipeFragment extends Fragment {
         pbIndicator.setVisibility(View.VISIBLE);
 
         Bundle bundle = getArguments();
-        clickedRecipe = (Recipe) bundle.getParcelable("CLICKED_RECIPE");
-        Log.e("RECIPE TEST", "" + clickedRecipe.getName());
+        clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
 
         Map<Integer, Object> map = createHashMap(clickedRecipe.getIngredients(), clickedRecipe.getSteps());
         populateView(map);
@@ -72,7 +73,7 @@ public class RecipeFragment extends Fragment {
 
     private Map<Integer, Object> createHashMap(List<Ingredient> ingredients, List<Step> steps) {
 
-        Map<Integer, Object> map = new HashMap<>();
+        map = new HashMap<>();
 
         map.put(0, getString(R.string.ingredients));
 
@@ -90,7 +91,7 @@ public class RecipeFragment extends Fragment {
     }
 
     private void populateView(Map<Integer, Object> map) {
-        adapter = new RecipeAdapter(getContext(), clickedRecipe.getIngredients().size(), map);
+        adapter = new RecipeAdapter(getContext(), clickedRecipe.getIngredients().size(), map, this);
 
         rvRecipe.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -99,5 +100,19 @@ public class RecipeFragment extends Fragment {
         tvErrorMessage1.setVisibility(View.GONE);
         tvErrorMessage2.setVisibility(View.GONE);
         rvRecipe.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onListStepClick(int clickedStepIndex) {
+        Bundle args = new Bundle();
+        args.putParcelable("CLICKED_RECIPE", clickedRecipe);
+        args.putParcelable("CLICKED_STEP", (Parcelable) map.get(clickedStepIndex));
+
+        StepsFragment stepsFragment = new StepsFragment();
+        stepsFragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, stepsFragment)
+                .addToBackStack(stepsFragment.getClass().getSimpleName())
+                .commit();
     }
 }

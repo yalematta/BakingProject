@@ -21,4 +21,5 @@
     <dimen name="nav_header_height">176dp</dimen>
 
     <dimen name="ingredients_title">20dp</dimen>
+    <dimen name="navigation_title">18dp</dimen>
 </resources>
