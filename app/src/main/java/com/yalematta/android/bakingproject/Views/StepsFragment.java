@@ -32,7 +32,6 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
     private StepsAdapter stepsAdapter;
     private LinearLayout llPrevious, llNext;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,9 +65,7 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
         List<Fragment> fList = new ArrayList<>();
 
         for (int i = 0; i < clickedRecipe.getSteps().size(); i++) {
-            String stepId = String.valueOf(clickedRecipe.getSteps().get(i).getStepId());
-            String shortDescription = clickedRecipe.getSteps().get(i).getShortDescription();
-            fList.add(StepFragment.newInstance(stepId + ". " + shortDescription));
+            fList.add(StepFragment.newInstance(clickedRecipe.getSteps().get(i)));
         }
 
         return fList;
@@ -94,5 +91,4 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-
 }
