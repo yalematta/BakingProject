@@ -25,22 +25,23 @@ import java.util.List;
 
 public class StepsFragment extends Fragment implements View.OnClickListener {
 
+    private Step clickedStep;
+    private Recipe clickedRecipe;
     private ViewPager stepsPager;
     private TextView tvPagination;
     private StepsAdapter stepsAdapter;
     private LinearLayout llPrevious, llNext;
-    private Recipe clickedRecipe;
-    private Step clickedStep;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_steps, container,false);
+        View v = inflater.inflate(R.layout.fragment_steps, container, false);
 
         llNext = v.findViewById(R.id.llNext);
         stepsPager = v.findViewById(R.id.vpSteps);
-        llPrevious =  v.findViewById(R.id.llPrevious);
+        llPrevious = v.findViewById(R.id.llPrevious);
         tvPagination = v.findViewById(R.id.tvPagination);
 
         Bundle bundle = getArguments();
@@ -50,7 +51,10 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
         List<Fragment> fragments = getFragments();
         stepsAdapter = new StepsAdapter(getActivity().getSupportFragmentManager(), fragments);
         stepsPager.setAdapter(stepsAdapter);
-//      stepsPager.beginFakeDrag();
+        stepsPager.beginFakeDrag();
+
+        stepsPager.setCurrentItem(clickedStep.getStepId());
+        tvPagination.setText(clickedStep.getStepId() + 1 + "/" + clickedRecipe.getSteps().size());
 
         llPrevious.setOnClickListener(this);
         llNext.setOnClickListener(this);
@@ -61,7 +65,7 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<>();
 
-        for (int i = 0; i < clickedRecipe.getSteps().size(); i++){
+        for (int i = 0; i < clickedRecipe.getSteps().size(); i++) {
             String stepId = String.valueOf(clickedRecipe.getSteps().get(i).getStepId());
             String shortDescription = clickedRecipe.getSteps().get(i).getShortDescription();
             fList.add(StepFragment.newInstance(stepId + ". " + shortDescription));
@@ -72,11 +76,22 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        int currPos = stepsPager.getCurrentItem();
+
+        switch (view.getId()) {
+
             case R.id.llNext:
-                stepsPager.setCurrentItem(stepsPager.getCurrentItem() + 1);
+                int nextPos = currPos + 1;
+                stepsPager.setCurrentItem(nextPos);
+                if (nextPos < clickedRecipe.getSteps().size())
+                    tvPagination.setText(nextPos + 1 + "/" + clickedRecipe.getSteps().size());
+                break;
             case R.id.llPrevious:
-                stepsPager.setCurrentItem(stepsPager.getCurrentItem() - 1);
+                int previousPos = currPos - 1;
+                stepsPager.setCurrentItem(previousPos);
+                if (previousPos+2 > 1)
+                    tvPagination.setText(previousPos + 1 + "/" + clickedRecipe.getSteps().size());
+                break;
         }
     }
 

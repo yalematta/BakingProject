@@ -1,6 +1,8 @@
 package com.yalematta.android.bakingproject.Views;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,4 +36,5 @@ public class StepFragment extends Fragment {
         messageTextView.setText(message);
         return v;
     }
+
 }
