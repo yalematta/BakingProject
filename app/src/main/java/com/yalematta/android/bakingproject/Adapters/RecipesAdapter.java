@@ -34,11 +34,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         public RecipeViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            count = (TextView) view.findViewById(R.id.count);
-            overflow = (ImageView) view.findViewById(R.id.overflow);
-            cardView = (CardView) view.findViewById(R.id.card_view);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            title = view.findViewById(R.id.title);
+            count = view.findViewById(R.id.count);
+            overflow = view.findViewById(R.id.overflow);
+            cardView = view.findViewById(R.id.card_view);
+            thumbnail = view.findViewById(R.id.thumbnail);
 
             cardView.setOnClickListener(this);
         }

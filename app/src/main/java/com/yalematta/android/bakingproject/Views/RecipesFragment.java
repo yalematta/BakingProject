@@ -161,6 +161,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
                 .commit();
     }
 
+    //region Designing the CardViews
+
     /* RecyclerView item decoration - give equal margin around grid item */
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -202,6 +204,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
+
+    //endregion
 
     /* Save and Restore RecyclerView Scroll Position */
     @Override

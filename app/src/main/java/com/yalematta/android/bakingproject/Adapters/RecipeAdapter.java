@@ -103,6 +103,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return 0;
     }
 
+    //region ViewHolders methods
+
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
 
@@ -139,6 +141,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             mOnClickListener.onListStepClick(clickedPosition);
         }
     }
+
+    //endregion methods methods
 
     public interface ListStepClickListener {
         void onListStepClick(int clickedRecipeIndex);

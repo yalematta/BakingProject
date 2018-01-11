@@ -24,15 +24,22 @@ import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
@@ -51,7 +58,9 @@ import java.util.concurrent.ExecutionException;
  * Created by yalematta on 1/9/18.
  */
 
-public class StepFragment extends Fragment {
+public class StepFragment extends Fragment implements Player.EventListener {
+
+    //region Variables definitions
 
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
@@ -69,9 +78,15 @@ public class StepFragment extends Fragment {
     private ImageView mFullScreenIcon;
     private Dialog mFullScreenDialog;
 
+    private PlaybackStateCompat.Builder mStateBuilder;
+    private static MediaSessionCompat mMediaSession;
+    private MediaSessionCompat.Token token;
+
     private int mResumeWindow;
     private long mResumePosition;
     private MediaSource mVideoSource;
+
+    //endregion
 
     public static final StepFragment newInstance(Step step) {
         StepFragment f = new StepFragment();
@@ -98,9 +113,28 @@ public class StepFragment extends Fragment {
             mExoPlayerFullScreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
 
-        initExoPlayer();
-
         return v;
+    }
+
+    //region Initialization methods
+
+    private void initMediaSession() {
+        mMediaSession = new MediaSessionCompat(getContext(), this.getClass().getSimpleName());
+        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        // Do not let MediaButtons restart the player when the app is not visible.
+        mMediaSession.setMediaButtonReceiver(null);
+
+        mStateBuilder = new PlaybackStateCompat.Builder().setActions(
+                PlaybackStateCompat.ACTION_PLAY |
+                        PlaybackStateCompat.ACTION_PAUSE |
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_REWIND |
+                        PlaybackStateCompat.ACTION_FAST_FORWARD);
+
+        mMediaSession.setPlaybackState(mStateBuilder.build());
+        mMediaSession.setCallback(new MySessionCallback());
+        mMediaSession.setActive(true);
     }
 
     private void initDataInView() {
@@ -149,6 +183,50 @@ public class StepFragment extends Fragment {
         }
     }
 
+    private void initExoPlayer() {
+
+        if (mPlayerView != null) {
+
+            if (mExoPlayer == null) {
+
+                initFullScreenDialog();
+                initFullScreenButton();
+
+                //Create an instance of the ExoPlayer
+                BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+                TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+                TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+                LoadControl loadControl = new DefaultLoadControl();
+                mExoPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getContext()), trackSelector, loadControl);
+                mPlayerView.setPlayer(mExoPlayer);
+
+                String streamUrl = clickedStep.getVideoURL();
+                String userAgent = Util.getUserAgent(getContext(), getActivity().getApplicationContext().getApplicationInfo().packageName);
+                DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getContext(), null, httpDataSourceFactory);
+                Uri mediaUri = Uri.parse(streamUrl);
+
+                mVideoSource = new ExtractorMediaSource(mediaUri, dataSourceFactory, new DefaultExtractorsFactory(), null, null);
+
+                boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
+
+                if (haveResumePosition) {
+                    mPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
+                }
+
+                mExoPlayer.prepare(mVideoSource);
+                mExoPlayer.setPlayWhenReady(true);
+                mExoPlayer.addListener(this);
+
+                initDataInView();
+            }
+        }
+    }
+
+    //endregion
+
+    //region FullScreen methods
+
     private void initFullScreenDialog() {
         mFullScreenDialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
             public void onBackPressed() {
@@ -191,38 +269,85 @@ public class StepFragment extends Fragment {
         });
     }
 
-    private void initExoPlayer() {
 
-        if (mPlayerView != null) {
-            initFullScreenDialog();
-            initFullScreenButton();
+    //endregion
 
-            String streamUrl = clickedStep.getVideoURL();
-            String userAgent = Util.getUserAgent(getContext(), getActivity().getApplicationContext().getApplicationInfo().packageName);
-            DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
-            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getContext(), null, httpDataSourceFactory);
-            Uri mediaUri = Uri.parse(streamUrl);
+    //region Play.EventListener methods
 
-            mVideoSource = new ExtractorMediaSource(mediaUri, dataSourceFactory, new DefaultExtractorsFactory(), null, null);
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
 
+    }
 
-            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-            TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-            LoadControl loadControl = new DefaultLoadControl();
-            SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getContext()), trackSelector, loadControl);
-            mPlayerView.setPlayer(player);
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
 
-            boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
+    }
 
-            if (haveResumePosition) {
-                mPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
-            }
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
 
-            mPlayerView.getPlayer().prepare(mVideoSource);
-            mPlayerView.getPlayer().setPlayWhenReady(true);
+    }
 
-            initDataInView();
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
+                    mExoPlayer.getCurrentPosition(), 1f);
+            Log.d("onPlayerStateChanged:", "PLAYING");
+        } else if((playbackState == ExoPlayer.STATE_READY)){
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    mExoPlayer.getCurrentPosition(), 1f);
+            Log.d("onPlayerStateChanged:", "PAUSED");
+        }
+        mMediaSession.setPlaybackState(mStateBuilder.build());
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+
+    }
+
+    @Override
+    public void onPositionDiscontinuity(int reason) {
+
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    @Override
+    public void onSeekProcessed() {
+
+    }
+    //endregion
+
+    private class MySessionCallback extends MediaSessionCompat.Callback {
+        @Override
+        public void onPlay() {
+            mExoPlayer.setPlayWhenReady(true);
+        }
+
+        @Override
+        public void onPause() {
+            mExoPlayer.setPlayWhenReady(false);
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            mExoPlayer.seekTo(0);
         }
     }
 
@@ -230,6 +355,7 @@ public class StepFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        initMediaSession();
         initExoPlayer();
 
         if (mExoPlayerFullScreen) {
@@ -249,13 +375,18 @@ public class StepFragment extends Fragment {
             mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
 
-            mPlayerView.getPlayer().release();
+            releasePlayer();
         }
 
         if (mFullScreenDialog != null)
             mFullScreenDialog.dismiss();
     }
 
+    private void releasePlayer() {
+        mExoPlayer.stop();
+        mExoPlayer.release();
+        mExoPlayer = null;
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
