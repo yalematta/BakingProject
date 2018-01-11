@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,6 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
         llNext = v.findViewById(R.id.llNext);
         stepsPager = v.findViewById(R.id.vpSteps);
         llPrevious = v.findViewById(R.id.llPrevious);
-        tvPagination = v.findViewById(R.id.tvPagination);
 
         Bundle bundle = getArguments();
         clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
@@ -53,10 +53,11 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
         stepsPager.beginFakeDrag();
 
         stepsPager.setCurrentItem(clickedStep.getStepId());
-        tvPagination.setText(clickedStep.getStepId() + 1 + "/" + clickedRecipe.getSteps().size());
 
         llPrevious.setOnClickListener(this);
         llNext.setOnClickListener(this);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
         return v;
     }
@@ -80,14 +81,10 @@ public class StepsFragment extends Fragment implements View.OnClickListener {
             case R.id.llNext:
                 int nextPos = currPos + 1;
                 stepsPager.setCurrentItem(nextPos);
-                if (nextPos < clickedRecipe.getSteps().size())
-                    tvPagination.setText(nextPos + 1 + "/" + clickedRecipe.getSteps().size());
                 break;
             case R.id.llPrevious:
                 int previousPos = currPos - 1;
                 stepsPager.setCurrentItem(previousPos);
-                if (previousPos+2 > 1)
-                    tvPagination.setText(previousPos + 1 + "/" + clickedRecipe.getSteps().size());
                 break;
         }
     }

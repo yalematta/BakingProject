@@ -176,7 +176,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
 
         if (TextUtils.isEmpty(clickedStep.getVideoURL()) && TextUtils.isEmpty(clickedStep.getThumbnailURL())) {
-            mPlayerView.setVisibility(View.GONE);
+            mediaFrame.setVisibility(View.GONE);
         }
 
         if (clickedStep.getDescription().equals(clickedStep.getShortDescription())) {
@@ -390,6 +390,21 @@ public class StepFragment extends Fragment implements Player.EventListener {
             mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_fullscreen_skrink));
             mFullScreenDialog.show();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
+            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
+            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
+
+            mPlayerView.getPlayer().release();
+        }
+
+        if (mFullScreenDialog != null)
+            mFullScreenDialog.dismiss();
     }
 
     private void whenFragmentNotVisible(){

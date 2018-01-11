@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yalematta.android.bakingproject.Models.Ingredient;
@@ -59,11 +60,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
             Object mObject = map.get(position);
+            if (mObject.equals("Ingredients"))
+                ((HeaderViewHolder) holder).mImage.setImageResource(R.drawable.ingredients);
+            else
+                ((HeaderViewHolder) holder).mImage.setImageResource(R.drawable.steps);
             ((HeaderViewHolder) holder).mTitle.setText((String) mObject);
         } else if (holder instanceof IngredientViewHolder) {
             Object mObject = map.get(position);
             Ingredient ingredient = (Ingredient) mObject;
-            ((IngredientViewHolder) holder).mTitle.setText(ingredient.getIngredientName());
+            ((IngredientViewHolder) holder).mTitle.setText("\u25CF " + ingredient.getIngredientName());
             if ((ingredient.getQuantity() % 1) == 0) {
                 int quantity = (int) Math.round(ingredient.getQuantity());
                 ((IngredientViewHolder) holder).mDescription.setText(quantity + " " + ingredient.getMeasure());
@@ -74,6 +79,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } else if (holder instanceof StepViewHolder) {
             Object mObject = map.get(position);
             Step step = (Step) mObject;
+            ((StepViewHolder) holder).mId.setText(String.valueOf(step.getStepId()));
             ((StepViewHolder) holder).mTitle.setText(step.getShortDescription());
         }
     }
@@ -107,10 +113,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
+        private ImageView mImage;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.titleTextView);
+            mImage = itemView.findViewById(R.id.ivHeader);
+            mTitle = itemView.findViewById(R.id.tvHeader);
         }
     }
 
@@ -127,10 +135,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public static class StepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle;
+        private TextView mId;
 
         public StepViewHolder(View itemView) {
             super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.tvStepShortDescription);
+
+            mId = itemView.findViewById(R.id.tvStepId);
+            mTitle = itemView.findViewById(R.id.tvStepShortDescription);
 
             mTitle.setOnClickListener(this);
         }

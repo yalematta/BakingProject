@@ -36,7 +36,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
             super(view);
             title = view.findViewById(R.id.title);
             count = view.findViewById(R.id.count);
-            overflow = view.findViewById(R.id.overflow);
             cardView = view.findViewById(R.id.card_view);
             thumbnail = view.findViewById(R.id.thumbnail);
 
@@ -72,13 +71,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         // loading album cover using Glide library
         Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.recipeholder).into(holder.thumbnail);
-
-        holder.overflow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: Add this feature
-            }
-        });
     }
 
     @Override

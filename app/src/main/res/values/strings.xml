@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Baking Project</string>
+    <string name="app_name">Baking Time</string>
     <string name="title_activity_main">Baking Time</string>
+    <string name="baking_quote">"You only live once, lick the bowl..."</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -15,5 +16,7 @@
 
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+
+    <string name="view_recipe">View Recipe</string>
 
 </resources>

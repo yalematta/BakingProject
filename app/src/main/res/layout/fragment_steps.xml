@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_weight="1.5">
+            android:layout_weight="1.75">
 
             <ImageView
                 android:src="@drawable/ic_arrow_left"
@@ -36,24 +36,17 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/navigation_title"
                 android:text="@string/previous"
+                android:textStyle="bold"
                 android:textAllCaps="true" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvPagination"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="0.5"
-            android:text="19/20"/>
 
         <LinearLayout
             android:id="@+id/llNext"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="1.5"
+            android:layout_weight="1.75"
             android:gravity="end|center_vertical">
 
             <TextView
@@ -61,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/navigation_title"
                 android:text="@string/next"
+                android:textStyle="bold"
                 android:textAllCaps="true" />
 
             <ImageView

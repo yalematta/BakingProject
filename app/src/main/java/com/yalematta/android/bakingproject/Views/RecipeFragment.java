@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         Map<Integer, Object> map = createHashMap(clickedRecipe.getIngredients(), clickedRecipe.getSteps());
         populateView(map);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
         return v;
     }
