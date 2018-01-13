@@ -7,7 +7,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="error_message_1">Failed to get recipes</string>
-    <string name="error_message_2">Try again</string>
+    <string name="error_message_2">Retry</string>
 
     <string name="action_settings">Settings</string>
 

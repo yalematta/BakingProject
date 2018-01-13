@@ -112,11 +112,13 @@ public class StepFragment extends Fragment implements Player.EventListener {
         tvShortDesc = v.findViewById(R.id.tvShortDesc);
         mediaFrame = v.findViewById(R.id.main_media_frame);
 
+        /*
         if (savedInstanceState != null) {
             mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
             mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
             mExoPlayerFullScreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
+        */
 
         return v;
     }
@@ -144,6 +146,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     private void initDataInView() {
 
+        /*
         if (!TextUtils.isEmpty(clickedStep.getThumbnailURL())) {
             new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -174,8 +177,9 @@ public class StepFragment extends Fragment implements Player.EventListener {
                 }
             }.execute();
         }
+        */
 
-        if (TextUtils.isEmpty(clickedStep.getVideoURL()) && TextUtils.isEmpty(clickedStep.getThumbnailURL())) {
+        if (TextUtils.isEmpty(clickedStep.getVideoURL())) {
             mediaFrame.setVisibility(View.GONE);
         }
 
@@ -220,7 +224,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
                 }
 
                 mExoPlayer.prepare(mVideoSource);
-                mExoPlayer.setPlayWhenReady(true);
+                mExoPlayer.setPlayWhenReady(false);
                 mExoPlayer.addListener(this);
 
                 initDataInView();
@@ -341,6 +345,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
     }
     //endregion
 
+    //region When Fragment is paused or visible or not visible methods
     @Override
     public void setUserVisibleHint(boolean visible){
         super.setUserVisibleHint(visible);
@@ -348,6 +353,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
             fragmentResume = true;
             fragmentVisible = false;
             fragmentOnCreated = true;
+            whenFragmentVisible();
         }else  if (visible){        // only at fragment onCreated
             fragmentResume = false;
             fragmentVisible = true;
@@ -360,6 +366,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
     }
 
+    private void whenFragmentVisible() {
+        initMediaSession();
+        initExoPlayer();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -368,7 +379,27 @@ public class StepFragment extends Fragment implements Player.EventListener {
             mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
 
-            mPlayerView.getPlayer().release();
+            if (mExoPlayer != null) {
+                mExoPlayer.stop();
+                mExoPlayer.release();
+                mExoPlayer = null;
+            }
+        }
+
+        if (mFullScreenDialog != null)
+            mFullScreenDialog.dismiss();
+    }
+
+    private void whenFragmentNotVisible(){
+        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
+            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
+            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
+
+            if (mExoPlayer != null) {
+                mExoPlayer.stop();
+                mExoPlayer.release();
+                mExoPlayer = null;
+            }
         }
 
         if (mFullScreenDialog != null)
@@ -391,36 +422,25 @@ public class StepFragment extends Fragment implements Player.EventListener {
             mExoPlayer.seekTo(0);
         }
     }
+    //endregion
 
     @Override
     public void onResume() {
         super.onResume();
 
-        initMediaSession();
-        initExoPlayer();
+        whenFragmentVisible();
 
+        /*
         if (mExoPlayerFullScreen) {
             ((ViewGroup) mPlayerView.getParent()).removeView(mPlayerView);
             mFullScreenDialog.addContentView(mPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_fullscreen_skrink));
             mFullScreenDialog.show();
         }
+        */
     }
 
-
-
-    private void whenFragmentNotVisible(){
-        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
-            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
-
-            mPlayerView.getPlayer().release();
-        }
-
-        if (mFullScreenDialog != null)
-            mFullScreenDialog.dismiss();
-    }
-
+    /*
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
@@ -430,4 +450,5 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         super.onSaveInstanceState(outState);
     }
+    */
 }

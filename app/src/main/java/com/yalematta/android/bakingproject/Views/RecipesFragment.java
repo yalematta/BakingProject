@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -47,10 +48,11 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private Gson gson;
 
     private TextView tvErrorMessage1, tvErrorMessage2;
+    private List<Recipe> recipeList;
     private ProgressBar pbIndicator;
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
-    private List<Recipe> recipeList;
+    private ImageView failedImage;
 
     @Nullable
     @Override
@@ -59,6 +61,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         View v = inflater.inflate(R.layout.fragment_recipes,container,false);
 
         rvRecipes = v.findViewById(R.id.rvRecipes);
+        failedImage = v.findViewById(R.id.ivErrorImage);
         pbIndicator = v.findViewById(R.id.pbLoadingIndicator);
         tvErrorMessage1 = v.findViewById(R.id.tvErrorMessage1);
         tvErrorMessage2 = v.findViewById(R.id.tvErrorMessage2);
@@ -103,6 +106,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             else{
                 rvRecipes.setVisibility(View.GONE);
                 pbIndicator.setVisibility(View.GONE);
+                failedImage.setVisibility(View.VISIBLE);
                 tvErrorMessage1.setVisibility(View.VISIBLE);
                 tvErrorMessage2.setVisibility(View.VISIBLE);
             }
@@ -114,6 +118,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         public void onErrorResponse(VolleyError error) {
             rvRecipes.setVisibility(View.GONE);
             pbIndicator.setVisibility(View.GONE);
+            failedImage.setVisibility(View.VISIBLE);
             tvErrorMessage1.setVisibility(View.VISIBLE);
             tvErrorMessage2.setVisibility(View.VISIBLE);
         }
