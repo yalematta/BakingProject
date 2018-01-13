@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_explore) {
-
             FragmentManager fm = getSupportFragmentManager();
             int count = fm.getBackStackEntryCount();
             for(int i = 0; i < count; ++i) {

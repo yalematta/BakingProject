@@ -360,6 +360,21 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
+            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
+            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
+
+            mPlayerView.getPlayer().release();
+        }
+
+        if (mFullScreenDialog != null)
+            mFullScreenDialog.dismiss();
+    }
+
     private class MySessionCallback extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
@@ -392,20 +407,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
 
-        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
-            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
-
-            mPlayerView.getPlayer().release();
-        }
-
-        if (mFullScreenDialog != null)
-            mFullScreenDialog.dismiss();
-    }
 
     private void whenFragmentNotVisible(){
         if (mPlayerView != null && mPlayerView.getPlayer() != null) {
