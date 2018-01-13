@@ -2,17 +2,14 @@ package com.yalematta.android.bakingproject.Views;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.yalematta.android.bakingproject.R;
-import com.yalematta.android.bakingproject.Views.RecipesFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,8 +32,7 @@ public class MainActivity extends AppCompatActivity
 
         RecipesFragment recipesFragment = new RecipesFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, recipesFragment)
-                .addToBackStack(null)
+                .add(R.id.content_frame, recipesFragment)
                 .commit();
     }
 
@@ -57,16 +53,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_explore) {
+            /*
             FragmentManager fm = getSupportFragmentManager();
             int count = fm.getBackStackEntryCount();
             for(int i = 0; i < count; ++i) {
                 fm.popBackStackImmediate();
             }
-
+            */
             RecipesFragment recipesFragment = new RecipesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, recipesFragment)
-                    .addToBackStack(null)
+                    .add(R.id.content_frame, recipesFragment)
                     .commit();
         } else if (id == R.id.nav_favorites) {
 

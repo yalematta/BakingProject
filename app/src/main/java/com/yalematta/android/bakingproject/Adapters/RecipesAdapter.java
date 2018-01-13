@@ -29,8 +29,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public CardView cardView;
+        public ImageView thumbnail;
         public TextView title, count;
-        public ImageView thumbnail, overflow;
+
 
         public RecipeViewHolder(View view) {
             super(view);
