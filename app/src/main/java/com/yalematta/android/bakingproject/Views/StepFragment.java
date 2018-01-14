@@ -2,12 +2,10 @@ package com.yalematta.android.bakingproject.Views;
 
 
 import android.app.Dialog;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -19,9 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -53,7 +52,6 @@ import com.google.android.exoplayer2.util.Util;
 import com.yalematta.android.bakingproject.Models.Step;
 import com.yalematta.android.bakingproject.R;
 
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by yalematta on 1/9/18.
@@ -63,9 +61,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     //region Variables definitions
 
+    /*
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    */
 
     private Step clickedStep;
     private Bitmap stepBitmap;
@@ -185,8 +185,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         if (clickedStep.getDescription().equals(clickedStep.getShortDescription())) {
             tvDesc.setVisibility(View.GONE);
+            tvShortDesc.setVisibility(View.VISIBLE);
             tvShortDesc.setText(clickedStep.getShortDescription());
         } else {
+            tvDesc.setVisibility(View.VISIBLE);
+            tvShortDesc.setVisibility(View.VISIBLE);
             tvDesc.setText(clickedStep.getDescription());
             tvShortDesc.setText(clickedStep.getShortDescription());
         }

@@ -3,6 +3,7 @@ package com.yalematta.android.bakingproject.Adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by yalematta on 1/9/18.
  */
 
-public class StepsAdapter extends FragmentPagerAdapter {
+public class StepsAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> fragments;
 

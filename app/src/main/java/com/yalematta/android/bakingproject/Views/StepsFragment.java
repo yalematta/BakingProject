@@ -57,8 +57,6 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
         stepsPager.setAdapter(stepsAdapter);
         stepsPager.beginFakeDrag();
 
-        stepsPager.setCurrentItem(clickedStep.getStepId());
-
         if (isFirstPage(stepsPager.getCurrentItem())) llPrevious.setVisibility(View.INVISIBLE);
 
         stepsPager.addOnPageChangeListener(this);
@@ -68,6 +66,7 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
+        stepsPager.setCurrentItem(clickedStep.getStepId());
 
         return v;
     }

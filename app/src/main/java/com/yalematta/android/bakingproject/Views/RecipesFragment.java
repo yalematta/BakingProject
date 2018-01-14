@@ -59,10 +59,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecipesAdapter adapter;
     private ImageView failedImage;
 
-    private boolean fragmentResume = false;
-    private boolean fragmentVisible = false;
-    private boolean fragmentOnCreated = false;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
