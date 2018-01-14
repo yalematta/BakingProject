@@ -305,14 +305,12 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
+        if((playbackState == Player.STATE_READY) && playWhenReady){
             mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                     mExoPlayer.getCurrentPosition(), 1f);
-            Log.d("onPlayerStateChanged:", "PLAYING");
-        } else if((playbackState == ExoPlayer.STATE_READY)){
+        } else if((playbackState == Player.STATE_READY)){
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mExoPlayer.getCurrentPosition(), 1f);
-            Log.d("onPlayerStateChanged:", "PAUSED");
         }
         mMediaSession.setPlaybackState(mStateBuilder.build());
     }
