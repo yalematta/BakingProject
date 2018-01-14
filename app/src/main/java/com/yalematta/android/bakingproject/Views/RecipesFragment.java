@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -58,6 +59,10 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecipesAdapter adapter;
     private ImageView failedImage;
 
+    private boolean fragmentResume = false;
+    private boolean fragmentVisible = false;
+    private boolean fragmentOnCreated = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,7 +88,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         tvErrorMessage2.setOnClickListener(this);
 
         return v;
-}
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,7 +108,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         requestQueue.add(request);
     }
 
-    /* Volley Response */
+    //region Volley Response
     private final Response.Listener<String> onRecipesLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
@@ -131,6 +136,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             tvErrorMessage2.setVisibility(View.VISIBLE);
         }
     };
+    //endregion
 
     private void populateView() {
 
@@ -186,50 +192,55 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 refreshLayout.setRefreshing(false);
+                initializeData();
+                if (layoutManagerSavedState != null) {
+                    rvRecipes.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
+                }
             }
         }, 3000);
     }
 
-//region Designing the CardViews
+    //region Designing the CardViews
 
-/* RecyclerView item decoration - give equal margin around grid item */
-public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    /* RecyclerView item decoration - give equal margin around grid item */
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int spanCount;
-    private int spacing;
-    private boolean includeEdge;
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
 
-    public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-        this.spanCount = spanCount;
-        this.spacing = spacing;
-        this.includeEdge = includeEdge;
-    }
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
 
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        int position = parent.getChildAdapterPosition(view); // item position
-        int column = position % spanCount; // item column
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
 
-        if (includeEdge) {
-            outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-            outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
 
-            if (position < spanCount) { // top edge
-                outRect.top = spacing;
-            }
-            outRect.bottom = spacing; // item bottom
-        } else {
-            outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-            outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-            if (position >= spanCount) {
-                outRect.top = spacing; // item top
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
             }
         }
-    }
 
-}
+    }
 
     /* Converting dp to pixel */
     private int dpToPx(int dp) {
@@ -239,7 +250,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
     //endregion
 
-    /* Save and Restore RecyclerView Scroll Position */
+    //region Save and Restore RecyclerView Scroll Position */
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
@@ -254,6 +265,8 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
+    //endregion
+
     @Override
     public void onResume() {
         super.onResume();
@@ -262,5 +275,6 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         if (layoutManagerSavedState != null) {
             rvRecipes.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
         }
+        getActivity().setTitle(R.string.title_activity_main);
     }
 }

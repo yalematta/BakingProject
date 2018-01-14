@@ -2,17 +2,19 @@ package com.yalematta.android.bakingproject.Views;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.yalematta.android.bakingproject.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.content_frame, recipesFragment)
                 .commit();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
     @Override
@@ -53,13 +57,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_explore) {
-            /*
+
             FragmentManager fm = getSupportFragmentManager();
             int count = fm.getBackStackEntryCount();
             for(int i = 0; i < count; ++i) {
                 fm.popBackStackImmediate();
             }
-            */
+
             RecipesFragment recipesFragment = new RecipesFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, recipesFragment)
@@ -71,5 +75,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        int lastBackStackEntryCount = getSupportFragmentManager().getBackStackEntryCount() - 1;
+        if (lastBackStackEntryCount == -1) {
+            getSupportActionBar().setTitle(R.string.title_activity_main);
+        }
     }
 }
