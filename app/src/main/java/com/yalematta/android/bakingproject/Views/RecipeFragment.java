@@ -1,5 +1,6 @@
 package com.yalematta.android.bakingproject.Views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -10,6 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -66,6 +70,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
+        setHasOptionsMenu(true);
+
         return v;
     }
 
@@ -73,6 +79,31 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_recipe_share, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                try {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Sharing recipes");
+                    String sAux = "\nCheck out this " + clickedRecipe.getName() + " recipe:\n\n";
+                    sAux = sAux + "https://play.google.com/store/apps/details?id=com.yalematta.android.bakingproject \n\n";
+                    i.putExtra(Intent.EXTRA_TEXT, sAux);
+                    startActivity(Intent.createChooser(i, "Share Recipe"));
+                } catch(Exception e) {
+
+                }
+                return true;
+        }
+        return false;
     }
 
     private Map<Integer, Object> createHashMap(List<Ingredient> ingredients, List<Step> steps) {
