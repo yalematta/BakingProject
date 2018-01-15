@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.Adapters;
+package com.yalematta.android.bakingproject.adapters;
 
 import android.content.Context;
 import android.os.Parcelable;
@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.yalematta.android.bakingproject.Models.Recipe;
+import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
-import com.yalematta.android.bakingproject.Views.RecipesFragment;
 
 import java.util.List;
 

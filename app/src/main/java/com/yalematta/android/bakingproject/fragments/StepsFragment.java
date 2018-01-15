@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.Views;
+package com.yalematta.android.bakingproject.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.yalematta.android.bakingproject.Adapters.StepsAdapter;
-import com.yalematta.android.bakingproject.Models.Recipe;
-import com.yalematta.android.bakingproject.Models.Step;
+import com.yalematta.android.bakingproject.adapters.StepsAdapter;
+import com.yalematta.android.bakingproject.entities.Recipe;
+import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 
 import java.util.ArrayList;

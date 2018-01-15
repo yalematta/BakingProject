@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.Views;
+package com.yalematta.android.bakingproject.fragments;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -8,14 +8,10 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +28,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yalematta.android.bakingproject.Adapters.RecipesAdapter;
-import com.yalematta.android.bakingproject.Models.Recipe;
+import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
+import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
 
 import java.util.Arrays;

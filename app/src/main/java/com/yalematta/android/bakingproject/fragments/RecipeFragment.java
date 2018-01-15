@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.Views;
+package com.yalematta.android.bakingproject.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,21 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.yalematta.android.bakingproject.Adapters.RecipeAdapter;
-import com.yalematta.android.bakingproject.Models.Ingredient;
-import com.yalematta.android.bakingproject.Models.Recipe;
-import com.yalematta.android.bakingproject.Models.Step;
+import com.yalematta.android.bakingproject.adapters.RecipeAdapter;
+import com.yalematta.android.bakingproject.entities.Ingredient;
+import com.yalematta.android.bakingproject.entities.Recipe;
+import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 
 import java.util.HashMap;

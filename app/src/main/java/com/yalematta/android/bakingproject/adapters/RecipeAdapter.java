@@ -1,20 +1,17 @@
-package com.yalematta.android.bakingproject.Adapters;
+package com.yalematta.android.bakingproject.adapters;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yalematta.android.bakingproject.Models.Ingredient;
-import com.yalematta.android.bakingproject.Models.Step;
+import com.yalematta.android.bakingproject.entities.Ingredient;
+import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 
-import java.util.List;
 import java.util.Map;
 
 /**

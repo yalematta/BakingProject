@@ -1,5 +1,9 @@
-package com.yalematta.android.bakingproject.Models;
+package com.yalematta.android.bakingproject.entities;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,13 +13,23 @@ import com.google.gson.annotations.SerializedName;
  * Created by yalematta on 1/5/18.
  */
 
+@Entity(tableName = "step")
 public class Step implements Parcelable {
 
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
     public int stepId;
+
+    @ColumnInfo(name = "step_short_desc")
     public String shortDescription;
+
+    @ColumnInfo(name = "step_desc")
     public String description;
+
+    @Ignore
     public String videoURL;
+
+    @Ignore
     public String thumbnailURL;
 
     public Step(int stepId, String shortDescription, String description, String videoURL, String thumbnailURL) {

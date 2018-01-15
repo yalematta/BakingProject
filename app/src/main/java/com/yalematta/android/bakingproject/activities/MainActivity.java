@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.Views;
+package com.yalematta.android.bakingproject.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,10 +9,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
+import com.yalematta.android.bakingproject.database.AppDatabase;
+import com.yalematta.android.bakingproject.fragments.RecipesFragment;
+import com.yalematta.android.bakingproject.utils.DatabaseInitializer;
+
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity
                 .commit();
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
+
     }
 
     @Override

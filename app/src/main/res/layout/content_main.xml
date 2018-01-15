@@ -8,7 +8,7 @@
     android:id="@+id/content_frame"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main"
-    tools:context=".Views.MainActivity">
+    tools:context=".activities.MainActivity">
 
 
 

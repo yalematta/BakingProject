@@ -1,5 +1,10 @@
-package com.yalematta.android.bakingproject.Models;
+package com.yalematta.android.bakingproject.entities;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,14 +17,26 @@ import java.util.List;
  * Created by yalematta on 1/5/18.
  */
 
+@Entity(tableName = "recipe")
 public class Recipe implements Parcelable {
 
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
     public int recipeId;
+
+    @ColumnInfo(name = "recipe_name")
     public String name;
+
+    @Relation(parentColumn = "ingredientName", entityColumn = "quantity")
     public List<Ingredient> ingredients = null;
+
+    @Relation(parentColumn = "stepId", entityColumn = "shortDescription")
     public List<Step> steps = null;
+
+    @ColumnInfo(name = "recipe_servings")
     public int servings;
+
+    @Ignore
     public String image;
 
     public Recipe(int recipeId, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
@@ -29,6 +46,12 @@ public class Recipe implements Parcelable {
         this.steps = steps;
         this.servings = servings;
         this.image = image;
+    }
+
+    //todo: fix this constructor asap
+    public Recipe(int recipeId, String name) {
+        this.recipeId = recipeId;
+        this.name = name;
     }
 
     public int getRecipeId() {
