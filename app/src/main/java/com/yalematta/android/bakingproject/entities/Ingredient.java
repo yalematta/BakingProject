@@ -1,8 +1,5 @@
 package com.yalematta.android.bakingproject.entities;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,17 +9,13 @@ import com.google.gson.annotations.SerializedName;
  * Created by yalematta on 1/5/18.
  */
 
-@Entity(tableName = "ingredient")
 public class Ingredient implements Parcelable {
 
-    @PrimaryKey
     @SerializedName("ingredient")
     public String ingredientName;
 
-    @ColumnInfo(name = "ingredient_quantity")
     public double quantity;
 
-    @ColumnInfo(name = "ingredient_measure")
     public String measure;
 
     public Ingredient(double quantity, String measure, String ingredientName) {

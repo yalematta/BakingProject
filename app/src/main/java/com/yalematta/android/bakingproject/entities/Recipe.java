@@ -1,42 +1,31 @@
 package com.yalematta.android.bakingproject.entities;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by yalematta on 1/5/18.
  */
 
-@Entity(tableName = "recipe")
 public class Recipe implements Parcelable {
 
-    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
     public int recipeId;
 
-    @ColumnInfo(name = "recipe_name")
     public String name;
 
-    @Relation(parentColumn = "ingredientName", entityColumn = "quantity")
     public List<Ingredient> ingredients = null;
 
-    @Relation(parentColumn = "stepId", entityColumn = "shortDescription")
     public List<Step> steps = null;
 
-    @ColumnInfo(name = "recipe_servings")
     public int servings;
 
-    @Ignore
     public String image;
 
     public Recipe(int recipeId, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
@@ -48,17 +37,11 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
-    //todo: fix this constructor asap
-    public Recipe(int recipeId, String name) {
-        this.recipeId = recipeId;
-        this.name = name;
-    }
-
     public int getRecipeId() {
         return recipeId;
     }
 
-    public void setRecipeId(int id) {
+    public void setRecipeId(int recipeId) {
         this.recipeId = recipeId;
     }
 
@@ -112,8 +95,8 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.recipeId);
         dest.writeString(this.name);
-        dest.writeList(this.ingredients);
-        dest.writeList(this.steps);
+        dest.writeTypedList(this.ingredients);
+        dest.writeTypedList(this.steps);
         dest.writeInt(this.servings);
         dest.writeString(this.image);
     }
@@ -121,15 +104,13 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         this.recipeId = in.readInt();
         this.name = in.readString();
-        this.ingredients = new ArrayList<Ingredient>();
-        in.readList(this.ingredients, Ingredient.class.getClassLoader());
-        this.steps = new ArrayList<Step>();
-        in.readList(this.steps, Step.class.getClassLoader());
+        this.ingredients = in.createTypedArrayList(Ingredient.CREATOR);
+        this.steps = in.createTypedArrayList(Step.CREATOR);
         this.servings = in.readInt();
         this.image = in.readString();
     }
 
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
         @Override
         public Recipe createFromParcel(Parcel source) {
             return new Recipe(source);
