@@ -19,5 +19,7 @@
 
     <string name="view_recipe">View Recipe</string>
     <string name="share_recipe">Share Recipe</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
