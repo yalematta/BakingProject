@@ -1,8 +1,10 @@
 package com.yalematta.android.bakingproject.fragments;
 
+import android.arch.persistence.room.Room;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -12,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +31,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
+import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
+import com.yalematta.android.bakingproject.entities.Step;
+import com.yalematta.android.bakingproject.utils.AppDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +61,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
     private ImageView failedImage;
+
+    private AppDatabase db;
 
     @Nullable
     @Override
@@ -88,7 +97,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
     }
 
-    private void initializeData() {
+    private void initializeDataFromAPI() {
         requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
@@ -107,7 +116,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             recipeList = Arrays.asList(gson.fromJson(response, Recipe[].class));
 
             if (recipeList.size() > 0) {
-                populateView();
+                createDatabase();
             } else {
                 rvRecipes.setVisibility(View.GONE);
                 pbIndicator.setVisibility(View.GONE);
@@ -129,6 +138,55 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         }
     };
     //endregion
+
+    private void createDatabase() {
+        db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class, "recipes-database").build();
+        insertRecipes();
+//        insertIngredients();
+        getRecipes();
+    }
+
+    public void insertRecipes() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.getRecipeDao().deleteAll(recipeList);
+                db.getRecipeDao().insertAll(recipeList);
+                return null;
+            }
+        }.execute();
+    }
+
+//    public void insertIngredients() {
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                for (int i = 0; i < recipeList.size(); i++){
+//                    db.getIngredientDao().deleteAll(recipeList.get(i).getIngredients());
+//                    db.getIngredientDao().insertAll(recipeList.get(i).getIngredients());
+//                }
+//                return null;
+//            }
+//        }.execute();
+//    }
+
+    public void getRecipes(){
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                recipeList = db.getRecipeDao().getAllRecipes();
+//                for (int i = 0; i < recipeList.size(); i++){
+//                    List<Ingredient> ingredients = db.getIngredientDao().getIngredientsForRecipe(recipeList.get(i).getRecipeId());
+//                    recipeList.get(i).setIngredients(ingredients);
+//                    List<Step> steps = db.getStepDao().getStepsForRecipe(recipeList.get(i).getRecipeId());
+//                    recipeList.get(i).setSteps(steps);
+//                }
+                return null;
+            }
+        }.execute();
+
+        populateView();
+    }
 
     private void populateView() {
 
@@ -160,7 +218,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     @Override
     public void onListRecipeClick(int clickedRecipeIndex) {
         Bundle args = new Bundle();
-        args.putParcelable("CLICKED_RECIPE", (Parcelable) recipeList.get(clickedRecipeIndex));
+        args.putParcelable("CLICKED_RECIPE", recipeList.get(clickedRecipeIndex));
 
         RecipeFragment recipeFragment = new RecipeFragment();
         recipeFragment.setArguments(args);
@@ -242,7 +300,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
     //endregion
 
-    //region Save and Restore RecyclerView Scroll Position */
+    //region Save and Restore RecyclerView Scroll Position
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
@@ -268,5 +326,15 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             rvRecipes.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
         }
         getActivity().setTitle(R.string.title_activity_main);
+    }
+
+    private void initializeData(){
+
+        if (db == null){
+            initializeDataFromAPI();
+        }
+        else{
+            getRecipes();
+        }
     }
 }

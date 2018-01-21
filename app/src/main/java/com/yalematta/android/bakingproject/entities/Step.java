@@ -1,5 +1,9 @@
 package com.yalematta.android.bakingproject.entities;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,8 +13,10 @@ import com.google.gson.annotations.SerializedName;
  * Created by yalematta on 1/5/18.
  */
 
+@Entity(foreignKeys = @ForeignKey(entity = Recipe.class, parentColumns = "recipeId", childColumns = "stepRecipeId"))
 public class Step implements Parcelable {
 
+    @PrimaryKey
     @SerializedName("id")
     public int stepId;
 
@@ -21,6 +27,8 @@ public class Step implements Parcelable {
     public String videoURL;
 
     public String thumbnailURL;
+
+    public int stepRecipeId;
 
     public Step(int stepId, String shortDescription, String description, String videoURL, String thumbnailURL) {
         this.stepId = stepId;

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
 import com.yalematta.android.bakingproject.fragments.RecipesFragment;
+import com.yalematta.android.bakingproject.utils.AppDatabase;
 
 import io.fabric.sdk.android.Fabric;
 
