@@ -17,7 +17,9 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "Steps")
 public class Step implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    public int uniqueId;
+
     @SerializedName("id")
     public int stepId;
 

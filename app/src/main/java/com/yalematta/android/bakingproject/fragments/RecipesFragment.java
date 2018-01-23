@@ -152,11 +152,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
                 db.getRecipeDao().deleteAll(recipeList);
                 db.getRecipeDao().insertAll(recipeList);
 
-                for(int i = 0; i < recipeList.size(); i++){
-                    db.getIngredientDao().insertAll(recipeList.get(i).getIngredients());
-                    db.getStepDao().insertAll(recipeList.get(i).getSteps());
-                }
-
                 return null;
             }
         }.execute();
@@ -167,12 +162,12 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             @Override
             protected Void doInBackground(Void... voids) {
                 recipeList = db.getRecipeDao().getAllRecipes();
-//                for (int i = 0; i < recipeList.size(); i++){
-//                    List<Ingredient> ingredients = db.getIngredientDao().getIngredientsForRecipe(recipeList.get(i).getRecipeId());
-//                    recipeList.get(i).setIngredients(ingredients);
-//                    List<Step> steps = db.getStepDao().getStepsForRecipe(recipeList.get(i).getRecipeId());
-//                    recipeList.get(i).setSteps(steps);
-//                }
+
+                //just for checking if they are really added
+                for (int i = 0; i < recipeList.size(); i++){
+                    List<Ingredient> ingredients = recipeList.get(i).getIngredients();
+                    List<Step> steps  = recipeList.get(i).getSteps();
+                }
                 return null;
             }
         }.execute();
