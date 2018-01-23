@@ -1,5 +1,6 @@
 package com.yalematta.android.bakingproject.entities;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -12,10 +13,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by yalematta on 1/5/18.
  */
 
-@Entity(foreignKeys = @ForeignKey(entity = Recipe.class, parentColumns = "recipeId", childColumns = "ingRecipeId"))
+@Entity(tableName= "Ingredients")
 public class Ingredient implements Parcelable {
 
-    @PrimaryKey @NonNull
+    @PrimaryKey(autoGenerate = true)
+    public int ingredientId;
+
     @SerializedName("ingredient")
     public String ingredientName;
 
@@ -23,13 +26,16 @@ public class Ingredient implements Parcelable {
 
     public String measure;
 
-    public int ingRecipeId;
-
-    public Ingredient(double quantity, String measure, String ingredientName) {
+    public Ingredient(int ingredientId, double quantity, String measure, String ingredientName) {
+        this.ingredientId = ingredientId;
         this.quantity = quantity;
         this.measure = measure;
         this.ingredientName = ingredientName;
     }
+
+    public int getIngredientId() { return ingredientId; }
+
+    public void setIngredientId(int ingredientId) { this.ingredientId = ingredientId; }
 
     public double getQuantity() {
         return quantity;
@@ -55,10 +61,6 @@ public class Ingredient implements Parcelable {
         this.ingredientName = ingredientName;
     }
 
-    public int getIngRecipeId() { return ingRecipeId; }
-
-    public void setIngRecipeId(int ingRecipeId) { this.ingRecipeId = ingRecipeId; }
-
     @Override
     public int describeContents() {
         return 0;
@@ -66,18 +68,20 @@ public class Ingredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.ingredientId);
+        dest.writeString(this.ingredientName);
         dest.writeDouble(this.quantity);
         dest.writeString(this.measure);
-        dest.writeString(this.ingredientName);
     }
 
     protected Ingredient(Parcel in) {
+        this.ingredientId = in.readInt();
+        this.ingredientName = in.readString();
         this.quantity = in.readDouble();
         this.measure = in.readString();
-        this.ingredientName = in.readString();
     }
 
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
         @Override
         public Ingredient createFromParcel(Parcel source) {
             return new Ingredient(source);

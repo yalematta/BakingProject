@@ -5,9 +5,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
-import com.yalematta.android.bakingproject.entities.Step;
 
 import java.util.List;
 
@@ -26,11 +24,11 @@ public interface RecipeDao {
     void deleteAll(List<Recipe> recipes);
 
     // Gets all recipes in the database
-    @Query("SELECT * FROM recipe")
+    @Query("SELECT * FROM recipes")
     List<Recipe> getAllRecipes();
 
     // Gets recipe in the database with a recipe Id
-    @Query("SELECT * FROM recipe WHERE recipeId LIKE :recipeId")
+    @Query("SELECT * FROM recipes WHERE recipeId LIKE :recipeId")
     Recipe getRecipeWhereRecipeId(int recipeId);
 
 }

@@ -142,7 +142,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private void createDatabase() {
         db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class, "recipes-database").build();
         insertRecipes();
-//        insertIngredients();
         getRecipes();
     }
 
@@ -152,23 +151,16 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             protected Void doInBackground(Void... voids) {
                 db.getRecipeDao().deleteAll(recipeList);
                 db.getRecipeDao().insertAll(recipeList);
+
+                for(int i = 0; i < recipeList.size(); i++){
+                    db.getIngredientDao().insertAll(recipeList.get(i).getIngredients());
+                    db.getStepDao().insertAll(recipeList.get(i).getSteps());
+                }
+
                 return null;
             }
         }.execute();
     }
-
-//    public void insertIngredients() {
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                for (int i = 0; i < recipeList.size(); i++){
-//                    db.getIngredientDao().deleteAll(recipeList.get(i).getIngredients());
-//                    db.getIngredientDao().insertAll(recipeList.get(i).getIngredients());
-//                }
-//                return null;
-//            }
-//        }.execute();
-//    }
 
     public void getRecipes(){
         new AsyncTask<Void, Void, Void>(){

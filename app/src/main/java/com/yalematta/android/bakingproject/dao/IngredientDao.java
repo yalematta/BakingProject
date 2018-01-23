@@ -24,10 +24,6 @@ public interface IngredientDao {
     void deleteAll(List<Ingredient> ingredients);
 
     // Gets all ingredients in the database
-    @Query("SELECT * FROM ingredient")
+    @Query("SELECT * FROM ingredients")
     List<Ingredient> getAllIngredient();
-
-    @Query("SELECT * FROM ingredient WHERE ingRecipeId IS :ingRecipeId")
-    List<Ingredient> getIngredientsForRecipe(int ingRecipeId);
-
 }

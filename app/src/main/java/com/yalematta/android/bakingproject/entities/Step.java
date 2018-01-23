@@ -1,5 +1,6 @@
 package com.yalematta.android.bakingproject.entities;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
@@ -13,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by yalematta on 1/5/18.
  */
 
-@Entity(foreignKeys = @ForeignKey(entity = Recipe.class, parentColumns = "recipeId", childColumns = "stepRecipeId"))
+@Entity(tableName = "Steps")
 public class Step implements Parcelable {
 
     @PrimaryKey
@@ -27,8 +28,6 @@ public class Step implements Parcelable {
     public String videoURL;
 
     public String thumbnailURL;
-
-    public int stepRecipeId;
 
     public Step(int stepId, String shortDescription, String description, String videoURL, String thumbnailURL) {
         this.stepId = stepId;
@@ -50,9 +49,7 @@ public class Step implements Parcelable {
         return shortDescription;
     }
 
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
+    public void setShortDescription(String shortDescription) { this.shortDescription = shortDescription; }
 
     public String getDescription() {
         return description;
@@ -78,7 +75,6 @@ public class Step implements Parcelable {
         this.thumbnailURL = thumbnailURL;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -101,7 +97,7 @@ public class Step implements Parcelable {
         this.thumbnailURL = in.readString();
     }
 
-    public static final Creator<Step> CREATOR = new Creator<Step>() {
+    public static final Parcelable.Creator<Step> CREATOR = new Parcelable.Creator<Step>() {
         @Override
         public Step createFromParcel(Parcel source) {
             return new Step(source);

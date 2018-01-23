@@ -4,10 +4,12 @@ package com.yalematta.android.bakingproject.entities;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.yalematta.android.bakingproject.utils.RecipeTypeConverters;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ import java.util.List;
  * Created by yalematta on 1/5/18.
  */
 
-@Entity(tableName = "Recipe")
+@Entity(tableName = "Recipes")
 public class Recipe implements Parcelable {
 
     @PrimaryKey
@@ -25,21 +27,19 @@ public class Recipe implements Parcelable {
 
     public String name;
 
-    @Ignore
-    public List<Ingredient> ingredients = null;
+    @TypeConverters(RecipeTypeConverters.class)
+    public List<Ingredient> ingredients;
 
-    @Ignore
-    public List<Step> steps = null;
+    @TypeConverters(RecipeTypeConverters.class)
+    public List<Step> steps;
 
     public int servings;
 
+    @Ignore
     public String image;
 
-    public Recipe(int recipeId, String name, int servings, String image) {
-        this.recipeId = recipeId;
-        this.name = name;
-        this.servings = servings;
-        this.image = image;
+    public Recipe() {
+
     }
 
     public int getRecipeId() {

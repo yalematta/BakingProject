@@ -24,9 +24,6 @@ public interface StepDao {
     void deleteAll(List<Step> steps);
 
     // Gets all steps in the database
-    @Query("SELECT * FROM step")
+    @Query("SELECT * FROM steps")
     List<Step> getAllStep();
-
-    @Query("SELECT * FROM step WHERE stepRecipeId IS :stepRecipeId")
-    List<Step> getStepsForRecipe(int stepRecipeId);
 }
