@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,6 +36,7 @@ import java.util.Map;
 public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener {
 
     private TextView tvErrorMessage1, tvErrorMessage2;
+    private FloatingActionButton fab;
     private Map<Integer, Object> map;
     private ProgressBar pbIndicator;
     private RecyclerView rvRecipe;
@@ -47,6 +49,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         View v = inflater.inflate(R.layout.fragment_recipe, container,false);
 
+        fab = v.findViewById(R.id.fab);
         rvRecipe = v.findViewById(R.id.rvRecipe);
         pbIndicator = v.findViewById(R.id.pbLoadingIndicator);
         tvErrorMessage1 = v.findViewById(R.id.tvErrorMessage1);
@@ -59,6 +62,23 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         rvRecipe.setItemAnimator(new DefaultItemAnimator());
 
         pbIndicator.setVisibility(View.VISIBLE);
+
+        //region Hide FAB on scrolling
+        rvRecipe.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy<0 && !fab.isShown())
+                    fab.show();
+                else if(dy>0 && fab.isShown())
+                    fab.hide();
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        //endregion
 
         Bundle bundle = getArguments();
         clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");

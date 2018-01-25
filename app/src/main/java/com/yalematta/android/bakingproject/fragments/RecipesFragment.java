@@ -168,6 +168,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
                     List<Ingredient> ingredients = recipeList.get(i).getIngredients();
                     List<Step> steps  = recipeList.get(i).getSteps();
                 }
+
                 return null;
             }
         }.execute();
