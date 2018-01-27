@@ -39,6 +39,7 @@ import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.utils.AppDatabase;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,8 +62,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
     private ImageView failedImage;
-
-    private AppDatabase db;
 
     @Nullable
     @Override
@@ -140,7 +139,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     //endregion
 
     private void createDatabase() {
-        db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class, "recipes-database").build();
+        AppDatabase.create(getContext());
         insertRecipes();
         getRecipes();
     }
@@ -149,31 +148,29 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                db.getRecipeDao().deleteAll(recipeList);
-                db.getRecipeDao().insertAll(recipeList);
-
+                AppDatabase.getInstance(getContext()).getRecipeDao().deleteAll(recipeList);
+                AppDatabase.getInstance(getContext()).getRecipeDao().insertAll(recipeList);
                 return null;
             }
         }.execute();
     }
 
-    public void getRecipes(){
-        new AsyncTask<Void, Void, Void>(){
+    public void getRecipes() {
+
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                recipeList = db.getRecipeDao().getAllRecipes();
-
-                //just for checking if they are really added
-                for (int i = 0; i < recipeList.size(); i++){
-                    List<Ingredient> ingredients = recipeList.get(i).getIngredients();
-                    List<Step> steps  = recipeList.get(i).getSteps();
-                }
+                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
 
                 return null;
             }
-        }.execute();
 
-        populateView();
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                populateView();
+            }
+        }.execute();
     }
 
     private void populateView() {
@@ -316,13 +313,26 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         getActivity().setTitle(R.string.title_activity_main);
     }
 
-    private void initializeData(){
+    private void initializeData() {
 
-        if (db == null){
-            initializeDataFromAPI();
-        }
-        else{
-            getRecipes();
-        }
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+
+                if (recipeList != null && recipeList.size() != 0) {
+                    getRecipes();
+                } else {
+                    initializeDataFromAPI();
+                }
+            }
+
+        }.execute();
     }
 }

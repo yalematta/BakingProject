@@ -64,20 +64,20 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         pbIndicator.setVisibility(View.VISIBLE);
 
         //region Hide FAB on scrolling
-        rvRecipe.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                if (dy<0 && !fab.isShown())
-                    fab.show();
-                else if(dy>0 && fab.isShown())
-                    fab.hide();
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
+//        rvRecipe.addOnScrollListener(new RecyclerView.OnScrollListener(){
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+//                if (dy<0 && !fab.isShown())
+//                    fab.show();
+//                else if(dy>0 && fab.isShown())
+//                    fab.hide();
+//            }
+//
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//        });
         //endregion
 
         Bundle bundle = getArguments();
