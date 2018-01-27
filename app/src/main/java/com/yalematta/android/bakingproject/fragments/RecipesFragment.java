@@ -87,6 +87,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         pbIndicator.setVisibility(View.VISIBLE);
         tvErrorMessage2.setOnClickListener(this);
 
+        //TODO: get Arguments...
+
         return v;
     }
 

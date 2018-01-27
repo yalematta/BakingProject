@@ -86,9 +86,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
 
         if(clickedRecipe.isFavorite())
-            fab.setImageResource(R.drawable.ic_favorite_colored);
+            fab.setImageResource(R.drawable.ic_favorite_white_full);
         else
-            fab.setImageResource(R.drawable.ic_favorite_white);
+            fab.setImageResource(R.drawable.ic_favorite_white_empty);
 
         fab.setOnClickListener(this);
         //endregion
@@ -197,9 +197,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                         super.onPostExecute(result);
 
                         if (clickedRecipe.isFavorite()) {
-                            fab.setImageResource(R.drawable.ic_favorite_colored);
+                            fab.setImageResource(R.drawable.ic_favorite_white_full);
                         } else {
-                            fab.setImageResource(R.drawable.ic_favorite_white);
+                            fab.setImageResource(R.drawable.ic_favorite_white_empty);
                         }
                     }
 

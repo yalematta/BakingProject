@@ -70,12 +70,31 @@ public class MainActivity extends AppCompatActivity
                 fm.popBackStackImmediate();
             }
 
+            Bundle args = new Bundle();
+            args.putString("RECIPE_TYPE", "ALL_RECIPES");
+
             RecipesFragment recipesFragment = new RecipesFragment();
+            recipesFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, recipesFragment)
                     .commit();
+
         } else if (id == R.id.nav_favorites) {
 
+            FragmentManager fm = getSupportFragmentManager();
+            int count = fm.getBackStackEntryCount();
+            for(int i = 0; i < count; ++i) {
+                fm.popBackStackImmediate();
+            }
+
+            Bundle args = new Bundle();
+            args.putString("RECIPE_TYPE", "FAVORITE_RECIPES");
+
+            RecipesFragment recipesFragment = new RecipesFragment();
+            recipesFragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, recipesFragment)
+                    .commit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

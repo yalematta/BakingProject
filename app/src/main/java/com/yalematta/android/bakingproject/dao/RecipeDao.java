@@ -35,4 +35,8 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE recipeId LIKE :recipeId")
     Recipe getRecipeWhereRecipeId(int recipeId);
 
+    // Gets favorite recipes
+    @Query("SELECT * FROM recipes WHERE isFavorite IS true")
+    Recipe getFavoriteRecipes();
+
 }
