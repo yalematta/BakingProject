@@ -47,6 +47,7 @@
                 android:textSize="@dimen/servings_count" />
 
             <ImageView
+                android:id="@+id/heart"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/thumbnail"
                 android:layout_width="50dp"

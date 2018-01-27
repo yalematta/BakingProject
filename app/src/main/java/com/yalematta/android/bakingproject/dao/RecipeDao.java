@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.yalematta.android.bakingproject.entities.Recipe;
 
@@ -22,6 +23,9 @@ public interface RecipeDao {
 
     @Delete
     void deleteAll(List<Recipe> recipes);
+
+    @Update
+    void update(Recipe recipe);
 
     // Gets all recipes in the database
     @Query("SELECT * FROM recipes")

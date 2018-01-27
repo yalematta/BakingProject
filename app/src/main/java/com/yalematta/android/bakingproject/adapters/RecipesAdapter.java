@@ -28,14 +28,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public CardView cardView;
-        public ImageView thumbnail;
         public TextView title, count;
+        public ImageView thumbnail, heart;
 
 
         public RecipeViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.title);
             count = view.findViewById(R.id.count);
+            heart = view.findViewById(R.id.heart);
             cardView = view.findViewById(R.id.card_view);
             thumbnail = view.findViewById(R.id.thumbnail);
 
@@ -68,6 +69,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         Recipe recipe = recipeList.get(position);
         holder.title.setText(recipe.getName());
         holder.count.setText(recipe.getServings() + " servings");
+
+        if(recipe.isFavorite())
+            holder.heart.setImageResource(R.drawable.ic_favorite_full);
+        else
+            holder.heart.setImageResource(R.drawable.ic_favorite_empty);
 
         // loading album cover using Glide library
         Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.recipeholder).into(holder.thumbnail);

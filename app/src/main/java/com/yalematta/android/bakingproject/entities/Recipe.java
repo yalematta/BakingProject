@@ -27,6 +27,8 @@ public class Recipe implements Parcelable {
 
     public String name;
 
+    public boolean isFavorite = false;
+
     @TypeConverters(RecipeTypeConverters.class)
     public List<Ingredient> ingredients;
 
@@ -90,6 +92,10 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
+    public boolean isFavorite() { return isFavorite; }
+
+    public void setFavorite(boolean favorite) { isFavorite = favorite; }
+
 
     @Override
     public int describeContents() {
@@ -100,6 +106,7 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.recipeId);
         dest.writeString(this.name);
+        dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.ingredients);
         dest.writeTypedList(this.steps);
         dest.writeInt(this.servings);
@@ -109,6 +116,7 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         this.recipeId = in.readInt();
         this.name = in.readString();
+        this.isFavorite = in.readByte() != 0;
         this.ingredients = in.createTypedArrayList(Ingredient.CREATOR);
         this.steps = in.createTypedArrayList(Step.CREATOR);
         this.servings = in.readInt();

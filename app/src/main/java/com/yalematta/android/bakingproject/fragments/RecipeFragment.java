@@ -1,6 +1,7 @@
 package com.yalematta.android.bakingproject.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
+import com.yalematta.android.bakingproject.utils.AppDatabase;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,7 @@ import java.util.Map;
  * Created by yalematta on 1/7/18.
  */
 
-public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener {
+public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener, View.OnClickListener {
 
     private TextView tvErrorMessage1, tvErrorMessage2;
     private FloatingActionButton fab;
@@ -47,7 +49,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_recipe, container,false);
+        View v = inflater.inflate(R.layout.fragment_recipe, container, false);
 
         fab = v.findViewById(R.id.fab);
         rvRecipe = v.findViewById(R.id.rvRecipe);
@@ -63,7 +65,10 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         pbIndicator.setVisibility(View.VISIBLE);
 
-        //region Hide FAB on scrolling
+        Bundle bundle = getArguments();
+        clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
+
+        //region FAB methods
 //        rvRecipe.addOnScrollListener(new RecyclerView.OnScrollListener(){
 //            @Override
 //            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
@@ -78,15 +83,20 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 //                super.onScrollStateChanged(recyclerView, newState);
 //            }
 //        });
-        //endregion
 
-        Bundle bundle = getArguments();
-        clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
+
+        if(clickedRecipe.isFavorite())
+            fab.setImageResource(R.drawable.ic_favorite_colored);
+        else
+            fab.setImageResource(R.drawable.ic_favorite_white);
+
+        fab.setOnClickListener(this);
+        //endregion
 
         Map<Integer, Object> map = createHashMap(clickedRecipe.getIngredients(), clickedRecipe.getSteps());
         populateView(map);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
         setHasOptionsMenu(true);
 
@@ -116,7 +126,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                     sAux = sAux + "https://play.google.com/store/apps/details?id=com.yalematta.android.bakingproject \n\n";
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "Share Recipe"));
-                } catch(Exception e) {
+                } catch (Exception e) {
 
                 }
                 return true;
@@ -130,14 +140,14 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         map.put(0, getString(R.string.ingredients));
 
-        for (int i = 0; i < ingredients.size(); i++){
-            map.put(i+1, ingredients.get(i));
+        for (int i = 0; i < ingredients.size(); i++) {
+            map.put(i + 1, ingredients.get(i));
         }
 
-        map.put(ingredients.size()+1, getString(R.string.steps));
+        map.put(ingredients.size() + 1, getString(R.string.steps));
 
-        for (int i = 0; i < steps.size(); i++){
-            map.put(ingredients.size()+i+2, steps.get(i));
+        for (int i = 0; i < steps.size(); i++) {
+            map.put(ingredients.size() + i + 2, steps.get(i));
         }
 
         return map;
@@ -167,5 +177,34 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                 .replace(R.id.content_frame, stepsFragment)
                 .addToBackStack(stepsFragment.getClass().getSimpleName())
                 .commit();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fab:
+
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        clickedRecipe.setFavorite(!clickedRecipe.isFavorite());
+                        AppDatabase.getInstance(getContext()).getRecipeDao().update(clickedRecipe);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        super.onPostExecute(result);
+
+                        if (clickedRecipe.isFavorite()) {
+                            fab.setImageResource(R.drawable.ic_favorite_colored);
+                        } else {
+                            fab.setImageResource(R.drawable.ic_favorite_white);
+                        }
+                    }
+
+                }.execute();
+                break;
+        }
     }
 }
