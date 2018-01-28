@@ -57,11 +57,13 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
     private TextView tvErrorMessage1, tvErrorMessage2;
     private SwipeRefreshLayout refreshLayout;
+    private List<Recipe> favoriteList;
     private List<Recipe> recipeList;
     private ProgressBar pbIndicator;
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
     private ImageView failedImage;
+    private Bundle bundle;
 
     @Nullable
     @Override
@@ -87,7 +89,14 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         pbIndicator.setVisibility(View.VISIBLE);
         tvErrorMessage2.setOnClickListener(this);
 
-        //TODO: get Arguments...
+        bundle = getArguments();
+        if (bundle != null) {
+            if (bundle.getString("RECIPE_TYPE").equals("FAVORITE_RECIPES")) {
+                getFavoriteRecipes();
+            } else {
+                getRecipes();
+            }
+        }
 
         return v;
     }
@@ -170,21 +179,39 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                populateView();
+                populateView(recipeList);
             }
         }.execute();
     }
 
-    private void populateView() {
+    public void getFavoriteRecipes() {
 
-        adapter = new RecipesAdapter(getContext(), recipeList, this);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                favoriteList = AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                populateView(favoriteList);
+            }
+        }.execute();
+    }
+
+    private void populateView(List<Recipe> list) {
+
+        adapter = new RecipesAdapter(getContext(), list, this);
 
         final RecyclerView.LayoutManager mLayoutManager;
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mLayoutManager = new GridLayoutManager(getContext(), 1);
             rvRecipes.setLayoutManager(mLayoutManager);
-            rvRecipes.setHasFixedSize(true);
+//          rvRecipes.setHasFixedSize(true);
         } else {
             mLayoutManager = new GridLayoutManager(getContext(), 3);
             rvRecipes.setLayoutManager(mLayoutManager);
@@ -329,7 +356,13 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
                 super.onPostExecute(result);
 
                 if (recipeList != null && recipeList.size() != 0) {
-                    getRecipes();
+                    if (bundle != null) {
+                        if (bundle.getString("RECIPE_TYPE").equals("FAVORITE_RECIPES")) {
+                            getFavoriteRecipes();
+                        } else {
+                            getRecipes();
+                        }
+                    }
                 } else {
                     initializeDataFromAPI();
                 }

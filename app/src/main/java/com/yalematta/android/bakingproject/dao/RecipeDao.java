@@ -36,7 +36,7 @@ public interface RecipeDao {
     Recipe getRecipeWhereRecipeId(int recipeId);
 
     // Gets favorite recipes
-    @Query("SELECT * FROM recipes WHERE isFavorite")
-    Recipe getFavoriteRecipes();
+    @Query("SELECT * FROM recipes WHERE isFavorite = 1")
+    List<Recipe> getFavoriteRecipes();
 
 }
