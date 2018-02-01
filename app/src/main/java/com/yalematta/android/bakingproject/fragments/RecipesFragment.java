@@ -202,7 +202,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         final RecyclerView.LayoutManager mLayoutManager;
 
-        if (!AppUtilities.isTablet(getContext()) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (!AppUtilities.isTablet(this.getContext()) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mLayoutManager = new GridLayoutManager(getContext(), 1);
             rvRecipes.setLayoutManager(mLayoutManager);
         } else {
@@ -285,7 +285,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
                 outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
 
                 if (position < spanCount) { // top edge
-                    outRect.top = spacing;
+                    /* this was causing the first item in the gridLayout to be lower than the other items */
+                    //outRect.top = spacing;
                 }
                 outRect.bottom = spacing; // item bottom
             } else {
