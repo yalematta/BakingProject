@@ -1,6 +1,5 @@
 package com.yalematta.android.bakingproject.fragments;
 
-import android.arch.persistence.room.Room;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -14,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +29,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
-import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
-import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.utils.AppDatabase;
+import com.yalematta.android.bakingproject.utils.AppUtilities;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,7 +52,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
     private TextView tvErrorMessage1, tvErrorMessage2;
     private SwipeRefreshLayout refreshLayout;
-    private List<Recipe> favoriteList;
     private List<Recipe> recipeList;
     private ProgressBar pbIndicator;
     private RecyclerView rvRecipes;
@@ -189,7 +183,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                favoriteList = AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
+                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
 
                 return null;
             }
@@ -197,7 +191,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                populateView(favoriteList);
+                populateView(recipeList);
             }
         }.execute();
     }
