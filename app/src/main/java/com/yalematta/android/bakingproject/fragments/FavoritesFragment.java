@@ -2,7 +2,6 @@ package com.yalematta.android.bakingproject.fragments;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,35 +20,27 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
-import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.database.AppDatabase;
 import com.yalematta.android.bakingproject.utils.AppUtilities;
 import com.yalematta.android.bakingproject.utils.GridSpacingItemDecoration;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by yalematta on 1/7/18.
+ * Created by yalematta on 2/2/18.
  */
 
-public class RecipesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String ENDPOINT = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
     private static final String SAVED_LAYOUT_MANAGER = "SAVED_LAYOUT_MANAGER";
     private Parcelable layoutManagerSavedState;
-    private RequestQueue requestQueue;
-    private Gson gson;
 
     private TextView tvErrorMessage1, tvErrorMessage2;
     private SwipeRefreshLayout refreshLayout;
@@ -58,7 +49,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
     private ImageView failedImage;
-    private Bundle bundle;
 
     @Nullable
     @Override
@@ -84,7 +74,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         pbIndicator.setVisibility(View.VISIBLE);
         tvErrorMessage2.setOnClickListener(this);
 
-        getRecipes();
+        getFavoriteRecipes();
 
         return v;
     }
@@ -94,36 +84,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         super.onCreate(savedInstanceState);
 
     }
-
-    private void initializeDataFromAPI() {
-        requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
-        fetchRecipes();
-    }
-
-    private void fetchRecipes() {
-        StringRequest request = new StringRequest(Request.Method.GET, ENDPOINT, onRecipesLoaded, onRecipesError);
-        requestQueue.add(request);
-    }
-
-    //region Volley Response
-    private final Response.Listener<String> onRecipesLoaded = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            recipeList = Arrays.asList(gson.fromJson(response, Recipe[].class));
-
-            if (recipeList.size() > 0) {
-                createDatabase();
-            } else {
-                rvRecipes.setVisibility(View.GONE);
-                pbIndicator.setVisibility(View.GONE);
-                failedImage.setVisibility(View.VISIBLE);
-                tvErrorMessage1.setVisibility(View.VISIBLE);
-                tvErrorMessage2.setVisibility(View.VISIBLE);
-            }
-        }
-    };
 
     private final Response.ErrorListener onRecipesError = new Response.ErrorListener() {
         @Override
@@ -137,29 +97,12 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     };
     //endregion
 
-    private void createDatabase() {
-        AppDatabase.create(getContext());
-        insertRecipes();
-        getRecipes();
-    }
-
-    public void insertRecipes() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                AppDatabase.getInstance(getContext()).getRecipeDao().deleteAll(recipeList);
-                AppDatabase.getInstance(getContext()).getRecipeDao().insertAll(recipeList);
-                return null;
-            }
-        }.execute();
-    }
-
-    public void getRecipes() {
+    public void getFavoriteRecipes() {
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
 
                 return null;
             }
@@ -288,9 +231,9 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
                 super.onPostExecute(result);
 
                 if (recipeList != null && recipeList.size() != 0) {
-                    getRecipes();
+                    getFavoriteRecipes();
                 } else {
-                    initializeDataFromAPI();
+                    // show image of no favorites
                 }
             }
 

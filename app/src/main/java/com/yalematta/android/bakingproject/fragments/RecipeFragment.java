@@ -25,7 +25,7 @@ import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
-import com.yalematta.android.bakingproject.utils.AppDatabase;
+import com.yalematta.android.bakingproject.database.AppDatabase;
 
 import java.util.HashMap;
 import java.util.List;

@@ -9,7 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.yalematta.android.bakingproject.utils.RecipeTypeConverters;
+import com.yalematta.android.bakingproject.database.RecipeTypeConverters;
 
 import java.util.List;
 

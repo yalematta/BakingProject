@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.utils;
+package com.yalematta.android.bakingproject.widgets;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

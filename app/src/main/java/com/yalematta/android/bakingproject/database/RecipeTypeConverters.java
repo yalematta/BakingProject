@@ -1,4 +1,4 @@
-package com.yalematta.android.bakingproject.utils;
+package com.yalematta.android.bakingproject.database;
 
 import android.arch.persistence.room.TypeConverter;
 

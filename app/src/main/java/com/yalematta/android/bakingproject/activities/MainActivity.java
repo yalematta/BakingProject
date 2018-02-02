@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
+import com.yalematta.android.bakingproject.fragments.FavoritesFragment;
 import com.yalematta.android.bakingproject.fragments.RecipesFragment;
 
 import io.fabric.sdk.android.Fabric;
@@ -69,11 +70,7 @@ public class MainActivity extends AppCompatActivity
                 fm.popBackStackImmediate();
             }
 
-            Bundle args = new Bundle();
-            args.putString("RECIPE_TYPE", "ALL_RECIPES");
-
             RecipesFragment recipesFragment = new RecipesFragment();
-            recipesFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, recipesFragment)
                     .commit();
@@ -86,13 +83,9 @@ public class MainActivity extends AppCompatActivity
                 fm.popBackStackImmediate();
             }
 
-            Bundle args = new Bundle();
-            args.putString("RECIPE_TYPE", "FAVORITE_RECIPES");
-
-            RecipesFragment recipesFragment = new RecipesFragment();
-            recipesFragment.setArguments(args);
+            FavoritesFragment favoritesFragment = new FavoritesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, recipesFragment)
+                    .add(R.id.content_frame, favoritesFragment)
                     .commit();
         }
 
