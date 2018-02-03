@@ -1,5 +1,6 @@
 package com.yalematta.android.bakingproject.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -25,11 +26,11 @@ public interface RecipeDao {
     void deleteAll(List<Recipe> recipes);
 
     @Update
-    void update(Recipe recipe);
+    void updateRecipe(Recipe recipe);
 
     // Gets all recipes in the database
     @Query("SELECT * FROM recipes")
-    List<Recipe> getAllRecipes();
+    LiveData<List<Recipe>> getAllRecipes();
 
     // Gets recipe in the database with a recipe Id
     @Query("SELECT * FROM recipes WHERE recipeId LIKE :recipeId")
@@ -37,6 +38,6 @@ public interface RecipeDao {
 
     // Gets favorite recipes
     @Query("SELECT * FROM recipes WHERE isFavorite = 1")
-    List<Recipe> getFavoriteRecipes();
+    LiveData<List<Recipe>> getFavoriteRecipes();
 
 }

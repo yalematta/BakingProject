@@ -1,5 +1,9 @@
 package com.yalematta.android.bakingproject.fragments;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -29,13 +33,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.database.AppDatabase;
 import com.yalematta.android.bakingproject.utils.AppUtilities;
 import com.yalematta.android.bakingproject.utils.GridSpacingItemDecoration;
+import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,6 +58,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RequestQueue requestQueue;
     private Gson gson;
 
+    private MediatorLiveData<List<Recipe>> mRecipeLive;
     private TextView tvErrorMessage1, tvErrorMessage2;
     private SwipeRefreshLayout refreshLayout;
     private List<Recipe> recipeList;
@@ -58,7 +66,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
     private ImageView failedImage;
-    private Bundle bundle;
 
     @Nullable
     @Override
@@ -84,7 +91,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         pbIndicator.setVisibility(View.VISIBLE);
         tvErrorMessage2.setOnClickListener(this);
 
-        getRecipes();
+        populateView();
 
         return v;
     }
@@ -140,7 +147,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private void createDatabase() {
         AppDatabase.create(getContext());
         insertRecipes();
-        getRecipes();
+        populateView();
     }
 
     public void insertRecipes() {
@@ -154,27 +161,9 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         }.execute();
     }
 
-    public void getRecipes() {
+    private void populateView() {
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-                populateView(recipeList);
-            }
-        }.execute();
-    }
-
-    private void populateView(List<Recipe> list) {
-
-        adapter = new RecipesAdapter(getContext(), list, this);
+        adapter = new RecipesAdapter(getContext(), new ArrayList<Recipe>(), this);
 
         final RecyclerView.LayoutManager mLayoutManager;
 
@@ -187,7 +176,17 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             rvRecipes.setHasFixedSize(true);
         }
         rvRecipes.setItemAnimator(new DefaultItemAnimator());
+
         rvRecipes.setAdapter(adapter);
+
+        MainActivity.viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+
+        MainActivity.viewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                adapter.addItems(recipes);
+            }
+        });
 
         adapter.notifyDataSetChanged();
 
@@ -201,7 +200,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     @Override
     public void onListRecipeClick(int clickedRecipeIndex) {
         Bundle args = new Bundle();
-        args.putParcelable("CLICKED_RECIPE", recipeList.get(clickedRecipeIndex));
+        args.putParcelable("CLICKED_RECIPE", MainActivity.viewModel.getRecipeList().getValue().get(clickedRecipeIndex));
 
         RecipeFragment recipeFragment = new RecipeFragment();
         recipeFragment.setArguments(args);
@@ -279,7 +278,23 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+
+                mRecipeLive = new MediatorLiveData<>();
+                final LiveData<List<Recipe>> recipes = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+
+                mRecipeLive.addSource(recipes, new Observer<List<Recipe>>() {
+
+                    @Override
+                    public void onChanged(@Nullable List<Recipe> recipeList) {
+                        if (recipeList == null || recipeList.isEmpty()) {
+                            initializeDataFromAPI();
+                        } else {
+                            mRecipeLive.removeSource(recipes);
+                            mRecipeLive.setValue(recipeList);
+                        }
+                    }
+                });
+
                 return null;
             }
 
@@ -287,8 +302,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
-                if (recipeList != null && recipeList.size() != 0) {
-                    getRecipes();
+                if (mRecipeLive.hasObservers()) {
+                    populateView();
                 } else {
                     initializeDataFromAPI();
                 }

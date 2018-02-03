@@ -28,13 +28,13 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_cake_image, pendingIntent);
 
-        // Instruct the widget manager to update the widget
+        // Instruct the widget manager to updateRecipe the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        // There may be multiple widgets active, so updateRecipe all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }

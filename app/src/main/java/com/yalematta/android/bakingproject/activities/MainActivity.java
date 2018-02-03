@@ -14,11 +14,14 @@ import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
 import com.yalematta.android.bakingproject.fragments.FavoritesFragment;
 import com.yalematta.android.bakingproject.fragments.RecipesFragment;
+import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
+
+    public static RecipeListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.content_frame, recipesFragment)
                 .commit();
+
+
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 

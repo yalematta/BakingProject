@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.RecipeAdapter;
 import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
@@ -188,7 +189,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                     @Override
                     protected Void doInBackground(Void... voids) {
                         clickedRecipe.setFavorite(!clickedRecipe.isFavorite());
-                        AppDatabase.getInstance(getContext()).getRecipeDao().update(clickedRecipe);
+                        AppDatabase.getInstance(getContext()).getRecipeDao().updateRecipe(clickedRecipe);
+                        MainActivity.viewModel.updateRecipe(clickedRecipe);
                         return null;
                     }
 

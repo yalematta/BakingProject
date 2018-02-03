@@ -20,10 +20,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
@@ -102,7 +100,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
+                recipeList = (List<Recipe>) AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
 
                 return null;
             }
@@ -222,7 +220,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                recipeList = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+                recipeList = (List<Recipe>) AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
                 return null;
             }
 
