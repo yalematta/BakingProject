@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,6 +44,7 @@ import com.yalematta.android.bakingproject.utils.AppUtilities;
 import com.yalematta.android.bakingproject.utils.GridSpacingItemDecoration;
 import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -302,7 +305,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
-                if (mRecipeLive.hasObservers()) {
+                if (something()) {
                     populateView();
                 } else {
                     initializeDataFromAPI();
@@ -310,5 +313,9 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             }
 
         }.execute();
+    }
+
+    private boolean something(){
+        return false;
     }
 }
