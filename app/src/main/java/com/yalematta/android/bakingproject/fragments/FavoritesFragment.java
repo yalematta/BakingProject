@@ -1,5 +1,7 @@
 package com.yalematta.android.bakingproject.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -23,12 +25,15 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yalematta.android.bakingproject.R;
+import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.database.AppDatabase;
 import com.yalematta.android.bakingproject.utils.AppUtilities;
 import com.yalematta.android.bakingproject.utils.GridSpacingItemDecoration;
+import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +52,8 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
     private ImageView failedImage;
+
+    private Recipe anyRecipe;
 
     @Nullable
     @Override
@@ -72,7 +79,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
         pbIndicator.setVisibility(View.VISIBLE);
         tvErrorMessage2.setOnClickListener(this);
 
-        getFavoriteRecipes();
+        populateFavorites();
 
         return v;
     }
@@ -95,27 +102,9 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     };
     //endregion
 
-    public void getFavoriteRecipes() {
+    private void populateFavorites() {
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                recipeList = (List<Recipe>) AppDatabase.getInstance(getContext()).getRecipeDao().getFavoriteRecipes();
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-                populateView(recipeList);
-            }
-        }.execute();
-    }
-
-    private void populateView(List<Recipe> list) {
-
-        adapter = new RecipesAdapter(getContext(), list, this);
+        adapter = new RecipesAdapter(getContext(), new ArrayList<Recipe>(), this);
 
         final RecyclerView.LayoutManager mLayoutManager;
 
@@ -128,7 +117,17 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
             rvRecipes.setHasFixedSize(true);
         }
         rvRecipes.setItemAnimator(new DefaultItemAnimator());
+
         rvRecipes.setAdapter(adapter);
+
+        MainActivity.viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+
+        MainActivity.viewModel.getFavoriteList().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                adapter.addItems(recipes);
+            }
+        });
 
         adapter.notifyDataSetChanged();
 
@@ -220,7 +219,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                recipeList = (List<Recipe>) AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+                anyRecipe = AppDatabase.getInstance(getContext()).getRecipeDao().getAnyRecipe();
                 return null;
             }
 
@@ -228,8 +227,8 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
-                if (recipeList != null && recipeList.size() != 0) {
-                    getFavoriteRecipes();
+                if (anyRecipe != null) {
+                    populateFavorites();
                 } else {
                     // show image of no favorites
                 }

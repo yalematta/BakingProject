@@ -21,6 +21,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,7 +62,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RequestQueue requestQueue;
     private Gson gson;
 
-    private MediatorLiveData<List<Recipe>> mRecipeLive;
     private TextView tvErrorMessage1, tvErrorMessage2;
     private SwipeRefreshLayout refreshLayout;
     private List<Recipe> recipeList;
@@ -303,31 +303,4 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         }.execute();
     }
-
-    //region using MediatorLiveData
-
-    /* I might use this method later on...
-    private MediatorLiveData<List<Recipe>> getSavedData() {
-
-        mRecipeLive = new MediatorLiveData<>();
-        final LiveData<List<Recipe>> recipes = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
-
-        mRecipeLive.addSource(recipes, new Observer<List<Recipe>>() {
-
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipeList) {
-                if (recipeList == null || recipeList.isEmpty()) {
-                    initializeDataFromAPI();
-                } else {
-                    mRecipeLive.removeSource(recipes);
-                    mRecipeLive.setValue(recipeList);
-                }
-            }
-        });
-
-        return mRecipeLive;
-    }
-    */
-
-    //endregion
 }

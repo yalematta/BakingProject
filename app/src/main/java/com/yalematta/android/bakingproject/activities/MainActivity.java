@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -40,15 +41,18 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RecipesFragment recipesFragment = new RecipesFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_frame, recipesFragment)
-                .commit();
+        navigationView.getMenu().getItem(0).setChecked(true);
 
+        if (null == savedInstanceState) {
+            // set you initial fragment object
 
+            RecipesFragment recipesFragment = new RecipesFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, recipesFragment)
+                    .commit();
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
-
+            getSupportFragmentManager().addOnBackStackChangedListener(this);
+        }
     }
 
     @Override
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
             FragmentManager fm = getSupportFragmentManager();
             int count = fm.getBackStackEntryCount();
-            for(int i = 0; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 fm.popBackStackImmediate();
             }
 
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity
 
             FragmentManager fm = getSupportFragmentManager();
             int count = fm.getBackStackEntryCount();
-            for(int i = 0; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 fm.popBackStackImmediate();
             }
 

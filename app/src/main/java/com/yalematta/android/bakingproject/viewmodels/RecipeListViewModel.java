@@ -32,9 +32,7 @@ public class RecipeListViewModel extends AndroidViewModel {
         favoriteList = appDatabase.getRecipeDao().getFavoriteRecipes();
     }
 
-    public LiveData<List<Recipe>> getRecipeList() {
-        return recipeList;
-    }
+    public LiveData<List<Recipe>> getRecipeList() { return recipeList; }
 
     public LiveData<List<Recipe>> getFavoriteList() {
         return favoriteList;
