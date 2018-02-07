@@ -40,4 +40,7 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE isFavorite = 1")
     LiveData<List<Recipe>> getFavoriteRecipes();
 
+    @Query("SELECT * FROM recipes LIMIT 1")
+    Recipe getAnyRecipe();
+
 }

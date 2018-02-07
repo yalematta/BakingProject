@@ -70,6 +70,8 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     private RecipesAdapter adapter;
     private ImageView failedImage;
 
+    private Recipe anyRecipe;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -282,22 +284,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             @Override
             protected Void doInBackground(Void... voids) {
 
-                mRecipeLive = new MediatorLiveData<>();
-                final LiveData<List<Recipe>> recipes = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
-
-                mRecipeLive.addSource(recipes, new Observer<List<Recipe>>() {
-
-                    @Override
-                    public void onChanged(@Nullable List<Recipe> recipeList) {
-                        if (recipeList == null || recipeList.isEmpty()) {
-                            initializeDataFromAPI();
-                        } else {
-                            mRecipeLive.removeSource(recipes);
-                            mRecipeLive.setValue(recipeList);
-                        }
-                    }
-                });
-
+                anyRecipe = AppDatabase.getInstance(getContext()).getRecipeDao().getAnyRecipe();
                 return null;
             }
 
@@ -305,17 +292,42 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
-                if (something()) {
+                if(anyRecipe != null){
                     populateView();
-                } else {
+                }
+                else {
                     initializeDataFromAPI();
                 }
+
             }
 
         }.execute();
     }
 
-    private boolean something(){
-        return false;
+    //region using MediatorLiveData
+
+    /* I might use this method later on...
+    private MediatorLiveData<List<Recipe>> getSavedData() {
+
+        mRecipeLive = new MediatorLiveData<>();
+        final LiveData<List<Recipe>> recipes = AppDatabase.getInstance(getContext()).getRecipeDao().getAllRecipes();
+
+        mRecipeLive.addSource(recipes, new Observer<List<Recipe>>() {
+
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipeList) {
+                if (recipeList == null || recipeList.isEmpty()) {
+                    initializeDataFromAPI();
+                } else {
+                    mRecipeLive.removeSource(recipes);
+                    mRecipeLive.setValue(recipeList);
+                }
+            }
+        });
+
+        return mRecipeLive;
     }
+    */
+
+    //endregion
 }
