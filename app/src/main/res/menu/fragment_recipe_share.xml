@@ -8,4 +8,11 @@
         android:title="@string/share_recipe"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_menu_widget"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="Add to widget" />
+
 </menu>

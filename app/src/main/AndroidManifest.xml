@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
@@ -22,19 +23,27 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="4544c943b67102c10eb2487c5d32a34e489c455f" />
 
-        <receiver android:name=".widgets.RecipeWidgetProvider">
+        <receiver android:name=".widgets.RecipeIngredientWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/recipe_widget_provider_info" />
+                android:resource="@xml/recipe_ingredient_widget_info" />
         </receiver>
+
+        <service android:name=".widgets.IngredientListService" />
+        <service android:name=".widgets.ListViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service android:name=".widgets.ListWidgetService" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4544c943b67102c10eb2487c5d32a34e489c455f" />
+
     </application>
 
 </manifest>

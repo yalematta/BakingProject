@@ -22,4 +22,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
 
+    <string name="widget_added_text">Ingredient\'s added to widget!</string>
+    <string name="widget_not_added_text">Some problem occurred. Try again.</string>
+
 </resources>

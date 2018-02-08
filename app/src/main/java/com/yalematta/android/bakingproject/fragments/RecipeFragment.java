@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.RecipeAdapter;
@@ -27,7 +29,9 @@ import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.database.AppDatabase;
+import com.yalematta.android.bakingproject.widgets.IngredientListService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +49,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     private RecyclerView rvRecipe;
     private RecipeAdapter adapter;
     private Recipe clickedRecipe;
+
+    public static String recipeTitle = "Recipe Title";
+    public static List<Ingredient> ingredientsModelList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -86,7 +93,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 //        });
 
 
-        if(clickedRecipe.isFavorite())
+        if (clickedRecipe.isFavorite())
             fab.setImageResource(R.drawable.ic_favorite_white_full);
         else
             fab.setImageResource(R.drawable.ic_favorite_white_empty);
@@ -96,6 +103,9 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         Map<Integer, Object> map = createHashMap(clickedRecipe.getIngredients(), clickedRecipe.getSteps());
         populateView(map);
+
+        recipeTitle = clickedRecipe.getName();
+        ingredientsModelList = clickedRecipe.getIngredients();
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
@@ -119,20 +129,32 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                try {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Sharing recipes");
-                    String sAux = "\nCheck out this " + clickedRecipe.getName() + " recipe:\n\n";
-                    sAux = sAux + "https://play.google.com/store/apps/details?id=com.yalematta.android.bakingproject \n\n";
-                    i.putExtra(Intent.EXTRA_TEXT, sAux);
-                    startActivity(Intent.createChooser(i, "Share Recipe"));
-                } catch (Exception e) {
-
-                }
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing recipes");
+                String sAux = "\nCheck out this " + clickedRecipe.getName() + " recipe:\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=com.yalematta.android.bakingproject \n\n";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "Share Recipe"));
                 return true;
+
+            case R.id.action_add:
+                int itemId = item.getItemId();
+                boolean recipeAdded;
+                if (itemId == R.id.action_add) {
+                    recipeTitle = clickedRecipe.getName();
+                    ingredientsModelList = clickedRecipe.getIngredients();
+                    recipeAdded = IngredientListService.startActionChangeIngredientList(this.getContext());
+
+                    if (recipeAdded)
+                        Toast.makeText(getContext(), R.string.widget_added_text, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getContext(), R.string.widget_not_added_text, Toast.LENGTH_SHORT).show();
+
+                    return true;
+                }
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     private Map<Integer, Object> createHashMap(List<Ingredient> ingredients, List<Step> steps) {
