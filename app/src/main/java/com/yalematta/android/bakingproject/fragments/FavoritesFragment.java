@@ -47,7 +47,6 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
 
     private TextView tvErrorMessage1, tvErrorMessage2;
     private SwipeRefreshLayout refreshLayout;
-    private List<Recipe> recipeList;
     private ProgressBar pbIndicator;
     private RecyclerView rvRecipes;
     private RecipesAdapter adapter;
@@ -85,9 +84,15 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        onRefresh();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     private final Response.ErrorListener onRecipesError = new Response.ErrorListener() {
@@ -141,7 +146,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     @Override
     public void onListRecipeClick(int clickedRecipeIndex) {
         Bundle args = new Bundle();
-        args.putParcelable("CLICKED_RECIPE", recipeList.get(clickedRecipeIndex));
+        args.putParcelable("CLICKED_RECIPE", MainActivity.viewModel.getFavoriteList().getValue().get(clickedRecipeIndex));
 
         RecipeFragment recipeFragment = new RecipeFragment();
         recipeFragment.setArguments(args);
@@ -155,6 +160,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tvErrorMessage2:
+                MainActivity.navigationView.getMenu().getItem(0).setChecked(true);
                 RecipesFragment recipesFragment = new RecipesFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .add(R.id.content_frame, recipesFragment)
@@ -219,7 +225,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                anyRecipe = AppDatabase.getInstance(getContext()).getRecipeDao().getAnyRecipe();
+                anyRecipe = AppDatabase.getInstance(getContext()).getRecipeDao().getAnyFavoriteRecipe();
                 return null;
             }
 
@@ -230,7 +236,14 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
                 if (anyRecipe != null) {
                     populateFavorites();
                 } else {
-                    // show image of no favorites
+                    rvRecipes.setVisibility(View.GONE);
+                    failedImage.setVisibility(View.VISIBLE);
+
+                    tvErrorMessage1.setText(getString(R.string.no_favorite));
+                    tvErrorMessage2.setText(getString(R.string.favorite_some));
+
+                    tvErrorMessage1.setVisibility(View.VISIBLE);
+                    tvErrorMessage2.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -43,4 +43,7 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipes LIMIT 1")
     Recipe getAnyRecipe();
 
+    @Query("SELECT * FROM recipes WHERE isFavorite = 1 LIMIT 1")
+    Recipe getAnyFavoriteRecipe();
+
 }

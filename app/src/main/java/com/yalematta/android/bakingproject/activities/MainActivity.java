@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     public static RecipeListViewModel viewModel;
+    public static NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity
 
             RecipesFragment recipesFragment = new RecipesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, recipesFragment)
+                    .replace(R.id.content_frame, recipesFragment)
                     .commit();
 
             getSupportFragmentManager().addOnBackStackChangedListener(this);
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
 
             RecipesFragment recipesFragment = new RecipesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, recipesFragment)
+                    .replace(R.id.content_frame, recipesFragment)
                     .commit();
 
         } else if (id == R.id.nav_favorites) {
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity
 
             FavoritesFragment favoritesFragment = new FavoritesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, favoritesFragment)
+                    .replace(R.id.content_frame, favoritesFragment)
                     .commit();
         }
 
