@@ -50,7 +50,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
             holder.heart.setImageResource(R.drawable.ic_favorite_empty);
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.recipeholder).into(holder.thumbnail);
+        Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.placeholder).into(holder.thumbnail);
     }
 
     @Override

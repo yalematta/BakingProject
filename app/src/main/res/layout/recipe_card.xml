@@ -19,11 +19,11 @@
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/recipe_cover_height"
+                android:layout_height="120dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:scaleType="fitCenter" />
+                android:scaleType="center" />
 
             <TextView
                 android:id="@+id/title"
