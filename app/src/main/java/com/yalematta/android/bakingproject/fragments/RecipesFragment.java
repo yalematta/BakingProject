@@ -86,9 +86,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         refreshLayout.setOnRefreshListener(this);
 
-        refreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                R.color.colorPrimaryLight,
-                R.color.colorPrimaryDark);
+        refreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
 
         rvRecipes.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
 

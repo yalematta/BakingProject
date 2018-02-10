@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryLight">#ffeb3b</color>
-    <color name="colorPrimaryDark">#bfa400</color>
-    <color name="colorPrimary">#f6d514</color>
-    <color name="colorAccent">#bfa400</color>
+    <color name="colorPrimaryLight">#ffffff</color>
+    <color name="colorPrimaryDark">#aa4b44</color>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorAccent">#aa4b44</color>
 
     <color name="viewBg">#f1f5f8</color>
     <color name="recipe_title">#000</color>

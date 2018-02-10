@@ -44,10 +44,10 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         holder.title.setText(recipe.getName());
         holder.count.setText(recipe.getServings() + " servings");
 
-        if (recipe.isFavorite())
-            holder.heart.setImageResource(R.drawable.ic_favorite_full);
-        else
-            holder.heart.setImageResource(R.drawable.ic_favorite_empty);
+      if (recipe.isFavorite())
+          holder.heart.setImageResource(R.drawable.ic_favorite_full);
+      else
+          holder.heart.setImageResource(R.drawable.ic_favorite_empty);
 
         // loading album cover using Glide library
         Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.placeholder).into(holder.thumbnail);

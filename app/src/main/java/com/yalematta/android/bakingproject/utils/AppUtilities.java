@@ -15,7 +15,4 @@ public class AppUtilities {
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-
-
-
 }
