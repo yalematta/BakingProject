@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -51,6 +52,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         // loading album cover using Glide library
         Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.placeholder).into(holder.thumbnail);
+
     }
 
     @Override
@@ -84,6 +86,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
             int clickedPosition = getAdapterPosition();
             clickListener.onListRecipeClick(clickedPosition);
         }
+
     }
 
     public interface ListRecipeClickListener {
