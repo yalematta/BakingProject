@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by yalematta on 1/7/18.
@@ -49,6 +50,7 @@ import static android.app.Activity.RESULT_CANCELED;
 
 public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener, View.OnClickListener {
 
+    private static final int KEY_CODE = 111;
     private TextView tvErrorMessage1, tvErrorMessage2;
     private FloatingActionButton fab;
     private Map<Integer, Object> map;
@@ -59,6 +61,10 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
     public static String recipeTitle = "Add your ingredients";
     public static List<Ingredient> ingredientsModelList = new ArrayList<>();
+
+    private int appWidgetId;
+    boolean hasWidget = false;
+    private Intent resultValue;
 
     @Nullable
     @Override
@@ -125,6 +131,30 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // get the appwidget id from the intent
+        Intent intent = getActivity().getIntent();
+        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID);
+
+        // make the result intent and set the result to canceled
+        resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        getActivity().setResult(RESULT_CANCELED, resultValue);
+
+        // if we weren't started properly, finish here
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finishConfigure();
+        }
+
+    }
+
+    private void finishConfigure() {
+    /* finish configuring appwidget ... */
+        getActivity().setResult(RESULT_OK, resultValue);
+
+        String key = String.format("appwidget%d_configured", appWidgetId);
+        SharedPreferences prefs = getActivity().getSharedPreferences("widget_prefs", 0);
+        prefs.edit().putBoolean(key, true).commit();
     }
 
     @Override
@@ -149,16 +179,28 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                 int itemId = item.getItemId();
                 boolean recipeAdded;
 
+                checkPhantomAppWidget();
+
                 if (itemId == R.id.action_add) {
                     recipeTitle = clickedRecipe.getName();
                     ingredientsModelList = clickedRecipe.getIngredients();
 
-                    recipeAdded = IngredientListService.startActionChangeIngredientList(this.getContext());
+                    if (hasWidget) {
 
-                    if (recipeAdded)
-                        Toast.makeText(getContext(), R.string.widget_added_text, Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(getContext(), R.string.widget_not_added_text, Toast.LENGTH_SHORT).show();
+                        recipeAdded = IngredientListService.startActionChangeIngredientList(this.getContext());
+
+                        if (recipeAdded)
+                            Toast.makeText(getContext(), R.string.widget_added_text, Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getContext(), R.string.widget_not_added_text, Toast.LENGTH_SHORT).show();
+                    }
+
+                    else {
+                        Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
+                        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                        startActivityForResult(pickIntent, KEY_CODE);
+                    }
+
 
                     return true;
                 }
@@ -238,6 +280,24 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
                 }.execute();
                 break;
+        }
+    }
+
+    private void checkPhantomAppWidget(){
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
+        AppWidgetHost appWidgetHost = new AppWidgetHost(getContext(), 1); // for removing phantoms
+        SharedPreferences prefs = getActivity().getSharedPreferences("widget_prefs", 0);
+
+        int[] appWidgetIDs = appWidgetManager.getAppWidgetIds(new ComponentName(getContext(), RecipeIngredientWidgetProvider.class));
+        for (int i = 0; i < appWidgetIDs.length; i++) {
+            int id = appWidgetIDs[i];
+            String key = String.format("appwidget%d_configured", id);
+            if (prefs.getBoolean(key, false)) {
+                hasWidget = true;
+            } else {
+                // delete the phantom appwidget
+                appWidgetHost.deleteAppWidgetId(id);
+            }
         }
     }
 }

@@ -169,7 +169,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         final RecyclerView.LayoutManager mLayoutManager;
 
-        if (!AppUtilities.isTablet(this.getContext()) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (/*!AppUtilities.isTablet(this.getContext()) && */ getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mLayoutManager = new GridLayoutManager(getContext(), 1);
             rvRecipes.setLayoutManager(mLayoutManager);
         } else {
