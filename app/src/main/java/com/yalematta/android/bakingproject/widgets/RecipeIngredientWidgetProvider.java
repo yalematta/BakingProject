@@ -1,12 +1,17 @@
 package com.yalematta.android.bakingproject.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
 import com.yalematta.android.bakingproject.R;
+import com.yalematta.android.bakingproject.activities.MainActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -25,6 +30,16 @@ public class RecipeIngredientWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         IngredientListService.startActionChangeIngredientList(context);
+
+        // Open MainActivity when clicking on Widget Title
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredient_widget);
+        Intent launchActivity = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchActivity, 0);
+        remoteViews.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);;
+
+        ComponentName thisWidget = new ComponentName(context, RecipeIngredientWidgetProvider.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        manager.updateAppWidget(thisWidget, remoteViews);
     }
 
     public static void updateIngredientWidgets(Context context, AppWidgetManager appWidgetManager, String recipeName, int[] appWidgetIds) {

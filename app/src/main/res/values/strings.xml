@@ -19,11 +19,13 @@
 
     <string name="view_recipe">View Recipe</string>
     <string name="share_recipe">Share Recipe</string>
-    <string name="appwidget_text">EXAMPLE</string>
+
+    <string name="appwidget_text">Add your ingredients</string>
     <string name="add_widget">Add widget</string>
 
     <string name="widget_added_text">Ingredient\'s added to widget!</string>
     <string name="widget_not_added_text">Some problem occurred. Try again.</string>
+
     <string name="no_favorite">Failed to get favorites</string>
     <string name="favorite_some">Favorite some</string>
 

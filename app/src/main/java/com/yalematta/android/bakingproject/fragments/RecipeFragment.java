@@ -1,6 +1,10 @@
 package com.yalematta.android.bakingproject.fragments;
 
+import android.appwidget.AppWidgetHost;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -30,11 +34,14 @@ import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.database.AppDatabase;
 import com.yalematta.android.bakingproject.widgets.IngredientListService;
+import com.yalematta.android.bakingproject.widgets.RecipeIngredientWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.app.Activity.RESULT_CANCELED;
 
 /**
  * Created by yalematta on 1/7/18.
@@ -50,7 +57,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     private RecipeAdapter adapter;
     private Recipe clickedRecipe;
 
-    public static String recipeTitle = "Recipe Title";
+    public static String recipeTitle = "Add your ingredients";
     public static List<Ingredient> ingredientsModelList = new ArrayList<>();
 
     @Nullable
@@ -141,9 +148,11 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
             case R.id.action_add:
                 int itemId = item.getItemId();
                 boolean recipeAdded;
+
                 if (itemId == R.id.action_add) {
                     recipeTitle = clickedRecipe.getName();
                     ingredientsModelList = clickedRecipe.getIngredients();
+
                     recipeAdded = IngredientListService.startActionChangeIngredientList(this.getContext());
 
                     if (recipeAdded)

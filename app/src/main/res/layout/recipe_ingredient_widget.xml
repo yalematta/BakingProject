@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e5e1a94f"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <FrameLayout
-        android:background="#7ee14fd7"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,7 +18,7 @@
             android:layout_margin="8dp"
             android:contentDescription="@string/appwidget_text"
             android:text="@string/appwidget_text"
-            android:textColor="#ffffff"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             android:textStyle="normal" />
 
