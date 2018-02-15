@@ -8,5 +8,6 @@
     <color name="viewBg">#f1f5f8</color>
     <color name="recipe_title">#000</color>
     <color name="ingredient_separator">#808080</color>
+    <color name="widget_background">#CCffffff</color>
 
 </resources>

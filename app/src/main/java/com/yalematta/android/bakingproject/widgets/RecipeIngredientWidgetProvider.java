@@ -35,7 +35,7 @@ public class RecipeIngredientWidgetProvider extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredient_widget);
         Intent launchActivity = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchActivity, 0);
-        remoteViews.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);;
+        remoteViews.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
         ComponentName thisWidget = new ComponentName(context, RecipeIngredientWidgetProvider.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(context);

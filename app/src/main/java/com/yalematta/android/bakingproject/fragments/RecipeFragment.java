@@ -63,7 +63,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     public static List<Ingredient> ingredientsModelList = new ArrayList<>();
 
     private int appWidgetId;
-    boolean hasWidget = false;
     private Intent resultValue;
 
     @Nullable
@@ -179,28 +178,16 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                 int itemId = item.getItemId();
                 boolean recipeAdded;
 
-                checkPhantomAppWidget();
-
                 if (itemId == R.id.action_add) {
                     recipeTitle = clickedRecipe.getName();
                     ingredientsModelList = clickedRecipe.getIngredients();
 
-                    if (hasWidget) {
+                    recipeAdded = IngredientListService.startActionChangeIngredientList(this.getContext());
 
-                        recipeAdded = IngredientListService.startActionChangeIngredientList(this.getContext());
-
-                        if (recipeAdded)
-                            Toast.makeText(getContext(), R.string.widget_added_text, Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(getContext(), R.string.widget_not_added_text, Toast.LENGTH_SHORT).show();
-                    }
-
-                    else {
-                        Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
-                        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                        startActivityForResult(pickIntent, KEY_CODE);
-                    }
-
+                    if (recipeAdded)
+                        Toast.makeText(getContext(), R.string.widget_added_text, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getContext(), R.string.widget_not_added_text, Toast.LENGTH_SHORT).show();
 
                     return true;
                 }
@@ -280,24 +267,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
                 }.execute();
                 break;
-        }
-    }
-
-    private void checkPhantomAppWidget(){
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
-        AppWidgetHost appWidgetHost = new AppWidgetHost(getContext(), 1); // for removing phantoms
-        SharedPreferences prefs = getActivity().getSharedPreferences("widget_prefs", 0);
-
-        int[] appWidgetIDs = appWidgetManager.getAppWidgetIds(new ComponentName(getContext(), RecipeIngredientWidgetProvider.class));
-        for (int i = 0; i < appWidgetIDs.length; i++) {
-            int id = appWidgetIDs[i];
-            String key = String.format("appwidget%d_configured", id);
-            if (prefs.getBoolean(key, false)) {
-                hasWidget = true;
-            } else {
-                // delete the phantom appwidget
-                appWidgetHost.deleteAppWidgetId(id);
-            }
         }
     }
 }
