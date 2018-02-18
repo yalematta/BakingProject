@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity
             FavoritesFragment favoritesFragment = new FavoritesFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, favoritesFragment)
+                    .addToBackStack(FavoritesFragment.class.getSimpleName())
                     .commit();
 
         } else if (id == R.id.nav_about) {
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity
             AboutFragment aboutFragment = new AboutFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, aboutFragment)
+                    .addToBackStack(AboutFragment.class.getSimpleName())
                     .commit();
         }
 
@@ -128,6 +130,10 @@ public class MainActivity extends AppCompatActivity
         int lastBackStackEntryCount = getSupportFragmentManager().getBackStackEntryCount() - 1;
         if (lastBackStackEntryCount == -1) {
             getSupportActionBar().setTitle(R.string.title_activity_main);
+            navigationView.getMenu().getItem(0).setChecked(true);
+        }
+        else if (getSupportFragmentManager().getBackStackEntryAt(lastBackStackEntryCount).getName().equals(FavoritesFragment.class.getSimpleName())){
+            getSupportActionBar().setTitle(R.string.favorites);
         }
     }
 }

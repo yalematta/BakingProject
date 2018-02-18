@@ -170,38 +170,41 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
     private void populateView() {
 
-        adapter = new RecipesAdapter(getContext(), new ArrayList<Recipe>(), this);
+        if (getActivity() != null) {
 
-        final RecyclerView.LayoutManager mLayoutManager;
+            adapter = new RecipesAdapter(getContext(), new ArrayList<Recipe>(), this);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mLayoutManager = new GridLayoutManager(getContext(), 1);
-            rvRecipes.setLayoutManager(mLayoutManager);
-        } else {
-            mLayoutManager = new GridLayoutManager(getContext(), 3);
-            rvRecipes.setLayoutManager(mLayoutManager);
-            rvRecipes.setHasFixedSize(true);
-        }
-        rvRecipes.setItemAnimator(new DefaultItemAnimator());
+            final RecyclerView.LayoutManager mLayoutManager;
 
-        rvRecipes.setAdapter(adapter);
-
-        MainActivity.viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
-
-        MainActivity.viewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                adapter.addItems(recipes);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                mLayoutManager = new GridLayoutManager(getContext(), 1);
+                rvRecipes.setLayoutManager(mLayoutManager);
+            } else {
+                mLayoutManager = new GridLayoutManager(getContext(), 3);
+                rvRecipes.setLayoutManager(mLayoutManager);
+                rvRecipes.setHasFixedSize(true);
             }
-        });
+            rvRecipes.setItemAnimator(new DefaultItemAnimator());
 
-        adapter.notifyDataSetChanged();
+            rvRecipes.setAdapter(adapter);
 
-        pbIndicator.setVisibility(View.GONE);
-        failedImage.setVisibility(View.GONE);
-        rvRecipes.setVisibility(View.VISIBLE);
-        tvErrorMessage1.setVisibility(View.GONE);
-        tvErrorMessage2.setVisibility(View.GONE);
+            MainActivity.viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+
+            MainActivity.viewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+                @Override
+                public void onChanged(@Nullable List<Recipe> recipes) {
+                    adapter.addItems(recipes);
+                }
+            });
+
+            adapter.notifyDataSetChanged();
+
+            pbIndicator.setVisibility(View.GONE);
+            failedImage.setVisibility(View.GONE);
+            rvRecipes.setVisibility(View.VISIBLE);
+            tvErrorMessage1.setVisibility(View.GONE);
+            tvErrorMessage2.setVisibility(View.GONE);
+        }
     }
 
     @Override
