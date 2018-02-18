@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
+import com.yalematta.android.bakingproject.fragments.AboutFragment;
 import com.yalematta.android.bakingproject.fragments.FavoritesFragment;
 import com.yalematta.android.bakingproject.fragments.RecipesFragment;
 import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
@@ -101,6 +102,19 @@ public class MainActivity extends AppCompatActivity
             FavoritesFragment favoritesFragment = new FavoritesFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, favoritesFragment)
+                    .commit();
+
+        } else if (id == R.id.nav_about) {
+
+            FragmentManager fm = getSupportFragmentManager();
+            int count = fm.getBackStackEntryCount();
+            for (int i = 0; i < count; ++i) {
+                fm.popBackStackImmediate();
+            }
+
+            AboutFragment aboutFragment = new AboutFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, aboutFragment)
                     .commit();
         }
 
