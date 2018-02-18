@@ -13,7 +13,7 @@ public class Attribution implements Parcelable {
     public String githubLink;
     public String copyright;
 
-    public Attribution(String libraryName, String githubLink, String copyright) {
+    public Attribution(String libraryName, String copyright, String githubLink) {
         this.libraryName = libraryName;
         this.githubLink = githubLink;
         this.copyright = copyright;

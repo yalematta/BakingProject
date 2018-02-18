@@ -29,6 +29,8 @@
     <string name="no_favorite">Failed to get favorites</string>
     <string name="favorite_some">Favorite some</string>
 
+    <string name="about">About</string>
+    <string name="favorites">Favorites</string>
     <string name="app_version">Version %s</string>
     <string name="attributions">Attributions</string>
 

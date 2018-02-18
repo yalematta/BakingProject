@@ -3,6 +3,7 @@ package com.yalematta.android.bakingproject.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ public class AttributionsFragment extends Fragment {
 
         populateAttributions();
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.attributions));
+
         return v;
     }
 
@@ -40,9 +43,9 @@ public class AttributionsFragment extends Fragment {
         attributionsList.add(new Attribution("Glide", "Copyright Sam Judd", "https://github.com/bumptech/glide"));
         attributionsList.add(new Attribution("Volley", "Copyright Google, Inc.", "https://github.com/google/volley"));
         attributionsList.add(new Attribution("ExoPlayer", "Copyright Google, Inc.", "https://github.com/google/ExoPlayer"));
-        attributionsList.add(new Attribution("Room", "Copyright 2018 The Android Open Source Project, Inc.", "https://github.com/googlesamples/android-architecture-components"));
+        attributionsList.add(new Attribution("Room", "Copyright The Android Open Source Project, Inc.", "https://github.com/googlesamples/android-architecture-components"));
 
-        AttributionsAdapter adapter = new AttributionsAdapter(getActivity(), attributionsList);
+        AttributionsAdapter adapter = new AttributionsAdapter(attributionsList, getContext());
         listView.setAdapter(adapter);
     }
 }

@@ -123,6 +123,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         setHasOptionsMenu(true);
 
+        setRetainInstance(true);
+
         return v;
     }
 

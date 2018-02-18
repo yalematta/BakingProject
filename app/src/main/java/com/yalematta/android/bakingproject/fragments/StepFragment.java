@@ -115,6 +115,8 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
         */
 
+//        setRetainInstance(true);
+
         return v;
     }
 

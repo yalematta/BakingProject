@@ -67,6 +67,8 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
 
         stepsPager.setCurrentItem(clickedStep.getStepId());
 
+        setRetainInstance(true);
+
         return v;
     }
 

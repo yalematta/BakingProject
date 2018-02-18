@@ -3,6 +3,7 @@ package com.yalematta.android.bakingproject.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,10 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
         tvVersion.setText(String.format(getString(R.string.app_version), BuildConfig.VERSION_NAME));
         tvAttributions.setOnClickListener(this);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.about));
+
+        setRetainInstance(true);
 
         return v;
     }

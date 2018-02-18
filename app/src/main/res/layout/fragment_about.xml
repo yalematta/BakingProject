@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/recipe_title"
         android:layout_margin="20dp"
+        android:textSize="16dp"
         android:text="@string/attributions"/>
 
 </LinearLayout>

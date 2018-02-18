@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,8 +91,12 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         rvRecipes.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
+
         pbIndicator.setVisibility(View.VISIBLE);
         tvErrorMessage2.setOnClickListener(this);
+
+        setRetainInstance(true);
 
         populateView();
 
