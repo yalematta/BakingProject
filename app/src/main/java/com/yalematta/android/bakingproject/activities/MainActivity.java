@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,12 +31,21 @@ public class MainActivity extends AppCompatActivity
     public static RecipeListViewModel viewModel;
     public static NavigationView navigationView;
 
+    public static boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.second_frame) != null) {
+            mTwoPane = true;
+        } else {
+            mTwoPane = false;
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
             RecipesFragment recipesFragment = new RecipesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, recipesFragment)
+                    .replace(R.id.content_frame, recipesFragment, RecipesFragment.class.getSimpleName())
                     .commit();
 
             getSupportFragmentManager().addOnBackStackChangedListener(this);
@@ -88,7 +98,7 @@ public class MainActivity extends AppCompatActivity
 
             RecipesFragment recipesFragment = new RecipesFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, recipesFragment)
+                    .replace(R.id.content_frame, recipesFragment, RecipesFragment.class.getSimpleName())
                     .commit();
 
         } else if (id == R.id.nav_favorites) {

@@ -212,12 +212,33 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         Bundle args = new Bundle();
         args.putParcelable("CLICKED_RECIPE", MainActivity.viewModel.getRecipeList().getValue().get(clickedRecipeIndex));
 
-        RecipeFragment recipeFragment = new RecipeFragment();
-        recipeFragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_frame, recipeFragment)
-                .addToBackStack(recipeFragment.getClass().getSimpleName())
-                .commit();
+        if (MainActivity.mTwoPane){
+
+
+
+            RecipeFragment recipeFragment = new RecipeFragment();
+            recipeFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, recipeFragment)
+                    .addToBackStack(recipeFragment.getClass().getSimpleName())
+                    .commit();
+
+            StepsFragment stepsFragment = new StepsFragment();
+            stepsFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.second_frame, stepsFragment)
+                    .addToBackStack(stepsFragment.getClass().getSimpleName())
+                    .commit();
+        }
+
+        else {
+            RecipeFragment recipeFragment = new RecipeFragment();
+            recipeFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, recipeFragment)
+                    .addToBackStack(recipeFragment.getClass().getSimpleName())
+                    .commit();
+        }
     }
 
     @Override
@@ -297,10 +318,9 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
-                if(anyRecipe != null){
+                if (anyRecipe != null) {
                     populateView();
-                }
-                else {
+                } else {
                     initializeDataFromAPI();
                 }
 
