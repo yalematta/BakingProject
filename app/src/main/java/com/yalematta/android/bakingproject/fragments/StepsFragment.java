@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.adapters.StepsAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.entities.Step;
@@ -65,7 +66,12 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
-        stepsPager.setCurrentItem(clickedStep.getStepId());
+        if (MainActivity.mTwoPane){
+            stepsPager.setCurrentItem(0);
+        }
+        else {
+            stepsPager.setCurrentItem(clickedStep.getStepId());
+        }
 
         setRetainInstance(true);
 

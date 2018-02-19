@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     public static RecipeListViewModel viewModel;
     public static NavigationView navigationView;
+    public static FrameLayout secondFrame;
 
     public static boolean mTwoPane;
 
@@ -57,8 +59,9 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        secondFrame = findViewById(R.id.second_frame);
 
         if (null == savedInstanceState) {
             // set you initial fragment object

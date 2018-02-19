@@ -214,8 +214,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         if (MainActivity.mTwoPane){
 
-
-
             RecipeFragment recipeFragment = new RecipeFragment();
             recipeFragment.setArguments(args);
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -232,6 +230,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         }
 
         else {
+
             RecipeFragment recipeFragment = new RecipeFragment();
             recipeFragment.setArguments(args);
             getActivity().getSupportFragmentManager().beginTransaction()
