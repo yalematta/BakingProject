@@ -37,6 +37,9 @@ import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by yalematta on 2/2/18.
  */
@@ -46,13 +49,14 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     private static final String SAVED_LAYOUT_MANAGER = "SAVED_LAYOUT_MANAGER";
     private Parcelable layoutManagerSavedState;
 
-    private TextView tvErrorMessage1, tvErrorMessage2;
-    private SwipeRefreshLayout refreshLayout;
-    private ProgressBar pbIndicator;
-    private RecyclerView rvRecipes;
-    private RecipesAdapter adapter;
-    private ImageView failedImage;
+    @BindView(R.id.swipe_layout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.pbLoadingIndicator) ProgressBar pbIndicator;
+    @BindView(R.id.tvErrorMessage1) TextView tvErrorMessage1;
+    @BindView(R.id.tvErrorMessage2) TextView tvErrorMessage2;
+    @BindView(R.id.ivErrorImage) ImageView failedImage;
+    @BindView(R.id.rvRecipes) RecyclerView rvRecipes;
 
+    private RecipesAdapter adapter;
     private Recipe anyRecipe;
 
     @Nullable
@@ -60,13 +64,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_recipes, container, false);
-
-        rvRecipes = v.findViewById(R.id.rvRecipes);
-        failedImage = v.findViewById(R.id.ivErrorImage);
-        refreshLayout = v.findViewById(R.id.swipe_layout);
-        pbIndicator = v.findViewById(R.id.pbLoadingIndicator);
-        tvErrorMessage1 = v.findViewById(R.id.tvErrorMessage1);
-        tvErrorMessage2 = v.findViewById(R.id.tvErrorMessage2);
+        ButterKnife.bind(this, v);
 
         refreshLayout.setOnRefreshListener(this);
 

@@ -12,22 +12,24 @@ import android.widget.TextView;
 import com.yalematta.android.bakingproject.BuildConfig;
 import com.yalematta.android.bakingproject.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by yalematta on 2/17/18.
  */
 
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
-    private TextView tvVersion, tvAttributions;
+    @BindView(R.id.tv_app_version) TextView tvVersion;
+    @BindView(R.id.tv_attributions) TextView tvAttributions;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_about, container, false);
-
-        tvVersion = v.findViewById(R.id.tv_app_version);
-        tvAttributions = v.findViewById(R.id.tv_attributions);
+        ButterKnife.bind(this, v);
 
         tvVersion.setText(String.format(getString(R.string.app_version), BuildConfig.VERSION_NAME));
         tvAttributions.setOnClickListener(this);

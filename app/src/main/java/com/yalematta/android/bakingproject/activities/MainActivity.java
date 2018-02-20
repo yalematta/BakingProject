@@ -24,14 +24,17 @@ import com.yalematta.android.bakingproject.fragments.FavoritesFragment;
 import com.yalematta.android.bakingproject.fragments.RecipesFragment;
 import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 
+import butterknife.BindView;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     public static RecipeListViewModel viewModel;
-    public static NavigationView navigationView;
+
     public static FrameLayout secondFrame;
+
+    public static NavigationView navigationView;
 
     public static boolean mTwoPane;
 

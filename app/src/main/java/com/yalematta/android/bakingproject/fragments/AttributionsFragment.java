@@ -15,20 +15,23 @@ import com.yalematta.android.bakingproject.entities.Attribution;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by yalematta on 2/18/18.
  */
 
 public class AttributionsFragment extends Fragment {
 
-    private ListView listView;
+    @BindView(R.id.lv_attributions) ListView listView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_attributions, container, false);
-        listView = v.findViewById(R.id.lv_attributions);
+        ButterKnife.bind(this, v);
 
         populateAttributions();
 

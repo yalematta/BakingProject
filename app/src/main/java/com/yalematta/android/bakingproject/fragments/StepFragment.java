@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,9 @@ import com.google.android.exoplayer2.util.Util;
 import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by yalematta on 1/9/18.
@@ -62,12 +66,14 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
     */
 
+    @BindView(R.id.tvDesc) TextView tvDesc;
+    @BindView(R.id.tvShortDesc) TextView tvShortDesc;
+    @BindView(R.id.main_media_frame) FrameLayout mediaFrame;
+    @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
+
     private Step clickedStep;
     private Bitmap stepBitmap;
-    private FrameLayout mediaFrame;
     private SimpleExoPlayer mExoPlayer;
-    private TextView tvShortDesc, tvDesc;
-    private SimpleExoPlayerView mPlayerView;
 
     private boolean mExoPlayerFullScreen = false;
     private FrameLayout mFullScreenButton;
@@ -102,10 +108,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
         clickedStep = getArguments().getParcelable("CLICKED_STEP");
 
         View v = inflater.inflate(R.layout.fragment_step, container, false);
-        tvDesc = v.findViewById(R.id.tvDesc);
-        mPlayerView = v.findViewById(R.id.playerView);
-        tvShortDesc = v.findViewById(R.id.tvShortDesc);
-        mediaFrame = v.findViewById(R.id.main_media_frame);
+        ButterKnife.bind(this, v);
 
         /*
         if (savedInstanceState != null) {

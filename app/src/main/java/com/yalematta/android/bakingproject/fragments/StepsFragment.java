@@ -22,6 +22,9 @@ import com.yalematta.android.bakingproject.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by yalematta on 1/8/18.
@@ -31,22 +34,20 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
 
     private Step clickedStep;
     private Recipe clickedRecipe;
-    private ViewPager stepsPager;
     private StepsAdapter stepsAdapter;
-    private TextView tvNext, tvPrevious;
-    private LinearLayout llPrevious, llNext;
+
+    @BindView(R.id.tvNext) TextView tvNext;
+    @BindView(R.id.llNext) LinearLayout llNext;
+    @BindView(R.id.vpSteps) ViewPager stepsPager;
+    @BindView(R.id.tvPrevious) TextView tvPrevious;
+    @BindView(R.id.llPrevious) LinearLayout llPrevious;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_steps, container, false);
-
-        llNext = v.findViewById(R.id.llNext);
-        tvNext = v.findViewById(R.id.tvNext);
-        stepsPager = v.findViewById(R.id.vpSteps);
-        llPrevious = v.findViewById(R.id.llPrevious);
-        tvPrevious = v.findViewById(R.id.tvPrevious);
+        ButterKnife.bind(this, v);
 
         Bundle bundle = getArguments();
         clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");

@@ -1,8 +1,6 @@
 package com.yalematta.android.bakingproject.fragments;
 
-import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -34,12 +31,14 @@ import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.database.AppDatabase;
 import com.yalematta.android.bakingproject.widgets.IngredientListService;
-import com.yalematta.android.bakingproject.widgets.RecipeIngredientWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -50,12 +49,14 @@ import static android.app.Activity.RESULT_OK;
 
 public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener, View.OnClickListener {
 
-    private static final int KEY_CODE = 111;
-    private TextView tvErrorMessage1, tvErrorMessage2;
-    private FloatingActionButton fab;
+
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.rvRecipe) RecyclerView rvRecipe;
+    @BindView(R.id.tvErrorMessage1) TextView tvErrorMessage1;
+    @BindView(R.id.tvErrorMessage2) TextView tvErrorMessage2;
+    @BindView(R.id.pbLoadingIndicator) ProgressBar pbIndicator;
+
     private Map<Integer, Object> map;
-    private ProgressBar pbIndicator;
-    private RecyclerView rvRecipe;
     private RecipeAdapter adapter;
     private Recipe clickedRecipe;
 
@@ -70,12 +71,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_recipe, container, false);
-
-        fab = v.findViewById(R.id.fab);
-        rvRecipe = v.findViewById(R.id.rvRecipe);
-        pbIndicator = v.findViewById(R.id.pbLoadingIndicator);
-        tvErrorMessage1 = v.findViewById(R.id.tvErrorMessage1);
-        tvErrorMessage2 = v.findViewById(R.id.tvErrorMessage2);
+        ButterKnife.bind(this, v);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -89,7 +85,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
 
         //region FAB methods
-//        rvRecipe.addOnScrollListener(new RecyclerView.OnScrollListener(){
+//        rvRecipes.addOnScrollListener(new RecyclerView.OnScrollListener(){
 //            @Override
 //            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
 //                if (dy<0 && !fab.isShown())
