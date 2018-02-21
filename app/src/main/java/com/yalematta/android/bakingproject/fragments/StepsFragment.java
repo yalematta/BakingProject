@@ -24,13 +24,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
  * Created by yalematta on 1/8/18.
  */
 
-public class StepsFragment extends Fragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class StepsFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private Step clickedStep;
     private Recipe clickedRecipe;
@@ -62,9 +63,6 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
 
         stepsPager.addOnPageChangeListener(this);
 
-        llPrevious.setOnClickListener(this);
-        llNext.setOnClickListener(this);
-
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
         if (MainActivity.mTwoPane){
@@ -89,31 +87,24 @@ public class StepsFragment extends Fragment implements View.OnClickListener, Vie
         return fList;
     }
 
-    @Override
-    public void onClick(View view) {
+    @OnClick(R.id.llNext)
+    public void onNextClick(View view) {
         int currPos = stepsPager.getCurrentItem();
-
-        switch (view.getId()) {
-
-            case R.id.llNext:
-                int nextPos = currPos + 1;
-
-                if (isLastPage(currPos)){
-                    FragmentManager mFragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
-                    mFragmentManager.popBackStackImmediate();
-                }
-                else{
-                    stepsPager.setCurrentItem(nextPos);
-                }
-
-                break;
-
-            case R.id.llPrevious:
-                int previousPos = currPos - 1;
-                stepsPager.setCurrentItem(previousPos);
-
-                break;
+        int nextPos = currPos + 1;
+        if (isLastPage(currPos)){
+            FragmentManager mFragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+            mFragmentManager.popBackStackImmediate();
         }
+        else{
+            stepsPager.setCurrentItem(nextPos);
+        }
+    }
+
+    @OnClick(R.id.llPrevious)
+    public void onPreviousClick(View view) {
+        int currPos = stepsPager.getCurrentItem();
+        int previousPos = currPos - 1;
+        stepsPager.setCurrentItem(previousPos);
     }
 
     private boolean isLastPage(int position) {

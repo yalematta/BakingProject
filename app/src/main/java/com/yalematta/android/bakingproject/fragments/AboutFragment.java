@@ -14,12 +14,13 @@ import com.yalematta.android.bakingproject.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yalematta on 2/17/18.
  */
 
-public class AboutFragment extends Fragment implements View.OnClickListener {
+public class AboutFragment extends Fragment {
 
     @BindView(R.id.tv_app_version) TextView tvVersion;
     @BindView(R.id.tv_attributions) TextView tvAttributions;
@@ -32,7 +33,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         ButterKnife.bind(this, v);
 
         tvVersion.setText(String.format(getString(R.string.app_version), BuildConfig.VERSION_NAME));
-        tvAttributions.setOnClickListener(this);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.about));
 
@@ -41,16 +41,12 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.tv_attributions:
-                AttributionsFragment attributionsFragment = new AttributionsFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, attributionsFragment)
-                        .commit();
-                break;
-        }
+    @OnClick(R.id.tv_attributions)
+    public void onAttributionsClick(View view) {
+        AttributionsFragment attributionsFragment = new AttributionsFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, attributionsFragment)
+                .commit();
     }
 
     @Override

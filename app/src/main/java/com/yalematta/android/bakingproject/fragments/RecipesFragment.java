@@ -52,12 +52,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yalematta on 1/7/18.
  */
 
-public class RecipesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class RecipesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String ENDPOINT = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
     private static final String SAVED_LAYOUT_MANAGER = "SAVED_LAYOUT_MANAGER";
@@ -92,7 +93,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.app_name));
 
         pbIndicator.setVisibility(View.VISIBLE);
-        tvErrorMessage2.setOnClickListener(this);
 
         setRetainInstance(true);
 
@@ -239,17 +239,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tvErrorMessage2:
-                RecipesFragment recipesFragment = new RecipesFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, recipesFragment)
-                        .commit();
-        }
-    }
-
-    @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -324,5 +313,13 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
             }
 
         }.execute();
+    }
+
+    @OnClick(R.id.tvErrorMessage2)
+    public void onErrorMessageClick(View view) {
+        RecipesFragment recipesFragment = new RecipesFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.content_frame, recipesFragment)
+                .commit();
     }
 }

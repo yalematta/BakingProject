@@ -39,6 +39,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -47,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by yalematta on 1/7/18.
  */
 
-public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener, View.OnClickListener {
+public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener {
 
 
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -106,7 +107,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         else
             fab.setImageResource(R.drawable.ic_favorite_white_empty);
 
-        fab.setOnClickListener(this);
         //endregion
 
         Map<Integer, Object> map = createHashMap(clickedRecipe.getIngredients(), clickedRecipe.getSteps());
@@ -238,33 +238,29 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
                 .commit();
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.fab:
+    @OnClick(R.id.fab)
+    public void onFabClick(View view) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                clickedRecipe.setFavorite(!clickedRecipe.isFavorite());
+                AppDatabase.getInstance(getContext()).getRecipeDao().updateRecipe(clickedRecipe);
+                MainActivity.viewModel.updateRecipe(clickedRecipe);
+                return null;
+            }
 
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        clickedRecipe.setFavorite(!clickedRecipe.isFavorite());
-                        AppDatabase.getInstance(getContext()).getRecipeDao().updateRecipe(clickedRecipe);
-                        MainActivity.viewModel.updateRecipe(clickedRecipe);
-                        return null;
-                    }
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
 
-                    @Override
-                    protected void onPostExecute(Void result) {
-                        super.onPostExecute(result);
+                if (clickedRecipe.isFavorite()) {
+                    fab.setImageResource(R.drawable.ic_favorite_white_full);
+                } else {
+                    fab.setImageResource(R.drawable.ic_favorite_white_empty);
+                }
+            }
 
-                        if (clickedRecipe.isFavorite()) {
-                            fab.setImageResource(R.drawable.ic_favorite_white_full);
-                        } else {
-                            fab.setImageResource(R.drawable.ic_favorite_white_empty);
-                        }
-                    }
-
-                }.execute();
-                break;
-        }
+        }.execute();
     }
+
 }

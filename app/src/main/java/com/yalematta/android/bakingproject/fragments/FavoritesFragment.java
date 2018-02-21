@@ -39,12 +39,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yalematta on 2/2/18.
  */
 
-public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String SAVED_LAYOUT_MANAGER = "SAVED_LAYOUT_MANAGER";
     private Parcelable layoutManagerSavedState;
@@ -75,7 +76,6 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
         rvRecipes.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
 
         pbIndicator.setVisibility(View.VISIBLE);
-        tvErrorMessage2.setOnClickListener(this);
 
         setRetainInstance(true);
 
@@ -162,16 +162,13 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
                 .commit();
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tvErrorMessage2:
-                MainActivity.navigationView.getMenu().getItem(0).setChecked(true);
-                RecipesFragment recipesFragment = new RecipesFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, recipesFragment)
-                        .commit();
-        }
+    @OnClick(R.id.tvErrorMessage2)
+    public void onErrorMessageClick(View view) {
+        MainActivity.navigationView.getMenu().getItem(0).setChecked(true);
+        RecipesFragment recipesFragment = new RecipesFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.content_frame, recipesFragment)
+                .commit();
     }
 
     @Override
