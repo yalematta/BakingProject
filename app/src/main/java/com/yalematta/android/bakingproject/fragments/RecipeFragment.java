@@ -43,13 +43,13 @@ import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by yalematta on 1/7/18.
  */
 
 public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepClickListener {
-
 
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.rvRecipe) RecyclerView rvRecipe;
@@ -109,7 +109,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         //endregion
 
-        Map<Integer, Object> map = createHashMap(clickedRecipe.getIngredients(), clickedRecipe.getSteps());
+        Map<Integer, Object> map = createHashMap(clickedRecipe.getSteps());
         populateView(map);
 
         recipeTitle = clickedRecipe.getName();
@@ -193,27 +193,23 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         return super.onOptionsItemSelected(item);
     }
 
-    private Map<Integer, Object> createHashMap(List<Ingredient> ingredients, List<Step> steps) {
+    private Map<Integer, Object> createHashMap(List<Step> steps) {
 
         map = new HashMap<>();
 
         map.put(0, getString(R.string.ingredients));
 
-        for (int i = 0; i < ingredients.size(); i++) {
-            map.put(i + 1, ingredients.get(i));
-        }
-
-        map.put(ingredients.size() + 1, getString(R.string.steps));
+        map.put(1, getString(R.string.steps));
 
         for (int i = 0; i < steps.size(); i++) {
-            map.put(ingredients.size() + i + 2, steps.get(i));
+            map.put(i + 2, steps.get(i));
         }
 
         return map;
     }
 
     private void populateView(Map<Integer, Object> map) {
-        adapter = new RecipeAdapter(getContext(), clickedRecipe.getIngredients().size(), map, this);
+        adapter = new RecipeAdapter(getContext(), map, this);
 
         rvRecipe.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -235,6 +231,19 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, stepsFragment)
                 .addToBackStack(stepsFragment.getClass().getSimpleName())
+                .commit();
+    }
+
+    @Override
+    public void onIngredientClick(){
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("INGREDIENTS", (ArrayList<? extends Parcelable>) clickedRecipe.getIngredients());
+
+        IngredientsFragment ingredientsFragment = new IngredientsFragment();
+        ingredientsFragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, ingredientsFragment)
+                .addToBackStack(ingredientsFragment.getClass().getSimpleName())
                 .commit();
     }
 

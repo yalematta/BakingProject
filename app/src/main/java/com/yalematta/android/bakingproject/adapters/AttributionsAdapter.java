@@ -38,7 +38,7 @@ public class AttributionsAdapter extends ArrayAdapter<Attribution> implements Vi
     public AttributionsAdapter(ArrayList<Attribution> data, Context context) {
         super(context, R.layout.item_attribution, data);
         this.dataSet = data;
-        this.mContext=context;
+        this.mContext = context;
 
     }
 

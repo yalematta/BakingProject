@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 
 public class AttributionsFragment extends Fragment {
 
-    @BindView(R.id.lv_attributions) ListView listView;
+    @BindView(R.id.lvAttributions) ListView listView;
 
     @Nullable
     @Override

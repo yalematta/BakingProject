@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Step;
 import com.yalematta.android.bakingproject.R;
 
@@ -21,19 +20,16 @@ import java.util.Map;
 public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private int ingredientsCount;
     private Map<Integer, Object> map;
     private static RecipeAdapter.ListStepClickListener mOnClickListener;
 
     private final static int HEADER_VIEW = 1;
-    private final static int INGREDIENT_VIEW = 2;
-    private final static int STEP_VIEW = 3;
+    private final static int STEP_VIEW = 2;
 
-    public RecipeAdapter(Context mContext, int ingredientsCount, Map<Integer, Object> map, ListStepClickListener listener) {
+    public RecipeAdapter(Context mContext, Map<Integer, Object> map, ListStepClickListener listener) {
         this.map = map;
         this.mContext = mContext;
         this.mOnClickListener = listener;
-        this.ingredientsCount = ingredientsCount;
     }
 
     @Override
@@ -43,9 +39,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case HEADER_VIEW:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
                 return new HeaderViewHolder(view);
-            case INGREDIENT_VIEW:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ingredient, parent, false);
-                return new IngredientViewHolder(view);
             case STEP_VIEW:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_step, parent, false);
                 return new StepViewHolder(view);
@@ -62,17 +55,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             else
                 ((HeaderViewHolder) holder).mImage.setImageResource(R.drawable.steps);
             ((HeaderViewHolder) holder).mTitle.setText((String) mObject);
-        } else if (holder instanceof IngredientViewHolder) {
-            Object mObject = map.get(position);
-            Ingredient ingredient = (Ingredient) mObject;
-            ((IngredientViewHolder) holder).mTitle.setText("\u25CF " + ingredient.getIngredientName());
-            if ((ingredient.getQuantity() % 1) == 0) {
-                int quantity = (int) Math.round(ingredient.getQuantity());
-                ((IngredientViewHolder) holder).mDescription.setText(quantity + " " + ingredient.getMeasure());
-            }
-            else {
-                ((IngredientViewHolder) holder).mDescription.setText(ingredient.getQuantity() + " " + ingredient.getMeasure());
-            }
         } else if (holder instanceof StepViewHolder) {
             Object mObject = map.get(position);
             Step step = (Step) mObject;
@@ -93,9 +75,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (map != null) {
             Object object = map.get(position);
             if (object != null) {
-                if (object instanceof Ingredient) {
-                    return INGREDIENT_VIEW;
-                } else if (object instanceof Step) {
+                if (object instanceof Step) {
                     return STEP_VIEW;
                 }
                 else if (object instanceof String){
@@ -108,7 +88,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     //region ViewHolders methods
 
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle;
         private ImageView mImage;
 
@@ -116,17 +96,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             mImage = itemView.findViewById(R.id.ivHeader);
             mTitle = itemView.findViewById(R.id.tvHeader);
+
+            mTitle.setOnClickListener(this);
         }
-    }
 
-    public static class IngredientViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTitle;
-        private TextView mDescription;
-
-        public IngredientViewHolder(View itemView) {
-            super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.tvIngredientName);
-            mDescription = (TextView) itemView.findViewById(R.id.tvIngredientQuantity);
+        @Override
+        public void onClick(View view) {
+            mOnClickListener.onIngredientClick();
         }
     }
 
@@ -154,5 +130,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface ListStepClickListener {
         void onListStepClick(int clickedRecipeIndex);
+        void onIngredientClick();
     }
 }
