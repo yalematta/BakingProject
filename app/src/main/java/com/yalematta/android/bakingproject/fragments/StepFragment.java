@@ -66,10 +66,14 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
     */
 
-    @BindView(R.id.tvDesc) TextView tvDesc;
-    @BindView(R.id.tvShortDesc) TextView tvShortDesc;
-    @BindView(R.id.main_media_frame) FrameLayout mediaFrame;
-    @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.tvDesc)
+    TextView tvDesc;
+    @BindView(R.id.tvShortDesc)
+    TextView tvShortDesc;
+    @BindView(R.id.main_media_frame)
+    FrameLayout mediaFrame;
+    @BindView(R.id.playerView)
+    SimpleExoPlayerView mPlayerView;
 
     private Step clickedStep;
     private Bitmap stepBitmap;
@@ -289,7 +293,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
     //region Play.EventListener methods
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
+    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 
     }
 
@@ -348,19 +352,18 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     //region When Fragment is paused or visible or not visible methods
     @Override
-    public void setUserVisibleHint(boolean visible){
+    public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
-        if (visible && isResumed()){   // only at fragment screen is resumed
+        if (visible && isResumed()) {   // only at fragment screen is resumed
             fragmentResume = true;
             fragmentVisible = false;
             fragmentOnCreated = true;
             whenFragmentVisible();
-        }else  if (visible){        // only at fragment onCreated
+        } else if (visible) {        // only at fragment onCreated
             fragmentResume = false;
             fragmentVisible = true;
             fragmentOnCreated = true;
-        }
-        else if(!visible && fragmentOnCreated){ // only when you go out of fragment screen
+        } else if (!visible && fragmentOnCreated) { // only when you go out of fragment screen
             fragmentVisible = false;
             fragmentResume = false;
             whenFragmentNotVisible();
@@ -391,7 +394,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
             mFullScreenDialog.dismiss();
     }
 
-    private void whenFragmentNotVisible(){
+    private void whenFragmentNotVisible() {
         if (mPlayerView != null && mPlayerView.getPlayer() != null) {
             mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());

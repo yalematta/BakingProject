@@ -47,6 +47,7 @@ public class AttributionsFragment extends Fragment {
         attributionsList.add(new Attribution("Volley", "Copyright Google, Inc.", "https://github.com/google/volley"));
         attributionsList.add(new Attribution("ExoPlayer", "Copyright Google, Inc.", "https://github.com/google/ExoPlayer"));
         attributionsList.add(new Attribution("Room", "Copyright The Android Open Source Project, Inc.", "https://github.com/googlesamples/android-architecture-components"));
+        attributionsList.add(new Attribution("ButterKnife", "Copyright 2013 Jake Wharton", "https://jakewharton.github.io/butterknife/"));
 
         AttributionsAdapter adapter = new AttributionsAdapter(attributionsList, getContext());
         listView.setAdapter(adapter);
