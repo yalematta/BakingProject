@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -37,6 +38,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.yalematta.android.bakingproject.activities.MainActivity;
+import com.yalematta.android.bakingproject.activities.RecipeActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
@@ -207,35 +209,10 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
     @Override
     public void onListRecipeClick(int clickedRecipeIndex) {
-        Bundle args = new Bundle();
-        args.putParcelable("CLICKED_RECIPE", MainActivity.viewModel.getRecipeList().getValue().get(clickedRecipeIndex));
 
-        if (MainActivity.mTwoPane){
-
-            RecipeFragment recipeFragment = new RecipeFragment();
-            recipeFragment.setArguments(args);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, recipeFragment)
-                    .addToBackStack(recipeFragment.getClass().getSimpleName())
-                    .commit();
-
-            StepsFragment stepsFragment = new StepsFragment();
-            stepsFragment.setArguments(args);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.second_frame, stepsFragment)
-                    .addToBackStack(stepsFragment.getClass().getSimpleName())
-                    .commit();
-        }
-
-        else {
-
-            RecipeFragment recipeFragment = new RecipeFragment();
-            recipeFragment.setArguments(args);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, recipeFragment)
-                    .addToBackStack(recipeFragment.getClass().getSimpleName())
-                    .commit();
-        }
+        Intent myIntent = new Intent(getActivity(), RecipeActivity.class);
+        myIntent.putExtra("CLICKED_RECIPE", MainActivity.viewModel.getRecipeList().getValue().get(clickedRecipeIndex));
+        this.startActivity(myIntent);
     }
 
     @Override

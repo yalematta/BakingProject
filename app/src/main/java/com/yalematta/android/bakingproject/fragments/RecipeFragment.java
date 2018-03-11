@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yalematta.android.bakingproject.activities.MainActivity;
+import com.yalematta.android.bakingproject.activities.RecipeActivity;
 import com.yalematta.android.bakingproject.adapters.RecipeAdapter;
 import com.yalematta.android.bakingproject.entities.Ingredient;
 import com.yalematta.android.bakingproject.entities.Recipe;
@@ -84,23 +85,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
 
         Bundle bundle = getArguments();
         clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
-
-        //region FAB methods
-//        rvRecipes.addOnScrollListener(new RecyclerView.OnScrollListener(){
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-//                if (dy<0 && !fab.isShown())
-//                    fab.show();
-//                else if(dy>0 && fab.isShown())
-//                    fab.hide();
-//            }
-//
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//        });
-
 
         if (clickedRecipe.isFavorite())
             fab.setImageResource(R.drawable.ic_favorite_white_full);
@@ -226,12 +210,22 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         args.putParcelable("CLICKED_RECIPE", clickedRecipe);
         args.putParcelable("CLICKED_STEP", (Parcelable) map.get(clickedStepIndex));
 
-        StepsFragment stepsFragment = new StepsFragment();
-        stepsFragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, stepsFragment)
-                .addToBackStack(stepsFragment.getClass().getSimpleName())
-                .commit();
+        if (!RecipeActivity.mTwoPane) {
+            StepsFragment stepsFragment = new StepsFragment();
+            stepsFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, stepsFragment)
+                    .addToBackStack(stepsFragment.getClass().getSimpleName())
+                    .commit();
+        }
+        else {
+            StepsFragment stepsFragment = new StepsFragment();
+            stepsFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.second_frame, stepsFragment)
+                    .addToBackStack(stepsFragment.getClass().getSimpleName())
+                    .commit();
+        }
     }
 
     @Override
@@ -239,12 +233,22 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         Bundle args = new Bundle();
         args.putParcelableArrayList("INGREDIENTS", (ArrayList<? extends Parcelable>) clickedRecipe.getIngredients());
 
-        IngredientsFragment ingredientsFragment = new IngredientsFragment();
-        ingredientsFragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, ingredientsFragment)
-                .addToBackStack(ingredientsFragment.getClass().getSimpleName())
-                .commit();
+        if (!RecipeActivity.mTwoPane) {
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
+            ingredientsFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, ingredientsFragment)
+                    .addToBackStack(ingredientsFragment.getClass().getSimpleName())
+                    .commit();
+        }
+        else {
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
+            ingredientsFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.second_frame, ingredientsFragment)
+                    .addToBackStack(ingredientsFragment.getClass().getSimpleName())
+                    .commit();
+        }
     }
 
     @OnClick(R.id.fab)

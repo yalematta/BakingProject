@@ -24,6 +24,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activities.RecipeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
 
         <receiver android:name=".widgets.RecipeIngredientWidgetProvider">
             <intent-filter>

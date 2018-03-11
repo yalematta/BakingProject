@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yalematta.android.bakingproject.activities.MainActivity;
+import com.yalematta.android.bakingproject.activities.RecipeActivity;
 import com.yalematta.android.bakingproject.adapters.StepsAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.entities.Step;
@@ -37,11 +38,16 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
     private Recipe clickedRecipe;
     private StepsAdapter stepsAdapter;
 
-    @BindView(R.id.tvNext) TextView tvNext;
-    @BindView(R.id.llNext) LinearLayout llNext;
-    @BindView(R.id.vpSteps) ViewPager stepsPager;
-    @BindView(R.id.tvPrevious) TextView tvPrevious;
-    @BindView(R.id.llPrevious) LinearLayout llPrevious;
+    @BindView(R.id.tvNext)
+    TextView tvNext;
+    @BindView(R.id.llNext)
+    LinearLayout llNext;
+    @BindView(R.id.vpSteps)
+    ViewPager stepsPager;
+    @BindView(R.id.tvPrevious)
+    TextView tvPrevious;
+    @BindView(R.id.llPrevious)
+    LinearLayout llPrevious;
 
     @Nullable
     @Override
@@ -65,10 +71,14 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
-        if (MainActivity.mTwoPane){
-            stepsPager.setCurrentItem(0);
-        }
-        else {
+        if (RecipeActivity.mTwoPane) {
+            if (clickedStep != null) {
+                stepsPager.setCurrentItem(clickedStep.getStepId());
+            }
+//            else{
+//                stepsPager.setCurrentItem(0);
+//            }
+        } else {
             stepsPager.setCurrentItem(clickedStep.getStepId());
         }
 
@@ -91,11 +101,10 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
     public void onNextClick(View view) {
         int currPos = stepsPager.getCurrentItem();
         int nextPos = currPos + 1;
-        if (isLastPage(currPos)){
+        if (isLastPage(currPos)) {
             FragmentManager mFragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
             mFragmentManager.popBackStackImmediate();
-        }
-        else{
+        } else {
             stepsPager.setCurrentItem(nextPos);
         }
     }

@@ -1,7 +1,7 @@
 package com.yalematta.android.bakingproject.activities;
 
-
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -12,28 +12,47 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.yalematta.android.bakingproject.R;
 import com.crashlytics.android.Crashlytics;
+import com.yalematta.android.bakingproject.R;
+import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.fragments.AboutFragment;
 import com.yalematta.android.bakingproject.fragments.FavoritesFragment;
+import com.yalematta.android.bakingproject.fragments.IngredientsFragment;
+import com.yalematta.android.bakingproject.fragments.RecipeFragment;
 import com.yalematta.android.bakingproject.fragments.RecipesFragment;
-import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
+import com.yalematta.android.bakingproject.fragments.StepsFragment;
+
+import java.util.ArrayList;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity
+/**
+ * Created by yalematta on 3/11/18.
+ */
+
+public class RecipeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
-    public static RecipeListViewModel viewModel;
+    public static FrameLayout secondFrame;
 
     public static NavigationView navigationView;
+
+    public static boolean mTwoPane;
+
+    private Recipe clickedRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_recipe);
+
+        if (findViewById(R.id.second_frame) != null) {
+            mTwoPane = true;
+        } else {
+            mTwoPane = false;
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,13 +67,40 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        if (null == savedInstanceState) {
-            // set you initial fragment object
+        secondFrame = findViewById(R.id.second_frame);
 
-            RecipesFragment recipesFragment = new RecipesFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, recipesFragment, RecipesFragment.class.getSimpleName())
-                    .commit();
+        clickedRecipe = getIntent().getParcelableExtra("CLICKED_RECIPE");
+        Bundle args = new Bundle();
+        Bundle _args = new Bundle();
+        args.putParcelable("CLICKED_RECIPE", clickedRecipe);
+        _args.putParcelableArrayList("INGREDIENTS", (ArrayList<? extends Parcelable>) clickedRecipe.getIngredients());
+
+        if (null == savedInstanceState) {
+            // set your initial fragment object
+
+            if (mTwoPane) {
+                RecipeFragment recipeFragment = new RecipeFragment();
+                recipeFragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, recipeFragment)
+                        .addToBackStack(recipeFragment.getClass().getSimpleName())
+                        .commit();
+
+                IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                ingredientsFragment.setArguments(_args);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.second_frame, ingredientsFragment)
+                        .addToBackStack(ingredientsFragment.getClass().getSimpleName())
+                        .commit();
+
+            } else {
+                RecipeFragment recipeFragment = new RecipeFragment();
+                recipeFragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, recipeFragment)
+                        .addToBackStack(recipeFragment.getClass().getSimpleName())
+                        .commit();
+            }
 
             getSupportFragmentManager().addOnBackStackChangedListener(this);
         }
@@ -65,7 +111,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -129,9 +178,9 @@ public class MainActivity extends AppCompatActivity
         if (lastBackStackEntryCount == -1) {
             getSupportActionBar().setTitle(R.string.title_activity_main);
             navigationView.getMenu().getItem(0).setChecked(true);
-        }
-        else if (getSupportFragmentManager().getBackStackEntryAt(lastBackStackEntryCount).getName().equals(FavoritesFragment.class.getSimpleName())){
+        } else if (getSupportFragmentManager().getBackStackEntryAt(lastBackStackEntryCount).getName().equals(FavoritesFragment.class.getSimpleName())) {
             getSupportActionBar().setTitle(R.string.favorites);
         }
     }
 }
+
