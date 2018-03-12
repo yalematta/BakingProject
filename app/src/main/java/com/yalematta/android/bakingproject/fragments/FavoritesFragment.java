@@ -2,6 +2,7 @@ package com.yalematta.android.bakingproject.fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -27,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.activities.MainActivity;
+import com.yalematta.android.bakingproject.activities.RecipeActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.database.AppDatabase;
@@ -151,15 +153,10 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
 
     @Override
     public void onListRecipeClick(int clickedRecipeIndex) {
-        Bundle args = new Bundle();
-        args.putParcelable("CLICKED_RECIPE", MainActivity.viewModel.getFavoriteList().getValue().get(clickedRecipeIndex));
 
-        RecipeFragment recipeFragment = new RecipeFragment();
-        recipeFragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_frame, recipeFragment)
-                .addToBackStack(recipeFragment.getClass().getSimpleName())
-                .commit();
+        Intent myIntent = new Intent(getActivity(), RecipeActivity.class);
+        myIntent.putExtra("CLICKED_RECIPE", MainActivity.viewModel.getFavoriteList().getValue().get(clickedRecipeIndex));
+        this.startActivity(myIntent);
     }
 
     @OnClick(R.id.tvErrorMessage2)

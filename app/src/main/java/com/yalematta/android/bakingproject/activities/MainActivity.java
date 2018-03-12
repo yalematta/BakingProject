@@ -58,6 +58,43 @@ public class MainActivity extends AppCompatActivity
 
             getSupportFragmentManager().addOnBackStackChangedListener(this);
         }
+
+        if(getIntent().getStringExtra("NAV_CLICKED") != null){
+
+            String navigation = getIntent().getStringExtra("NAV_CLICKED");
+
+            FragmentManager fm = getSupportFragmentManager();
+            int count = fm.getBackStackEntryCount();
+            for (int i = 0; i < count; ++i) {
+                fm.popBackStackImmediate();
+            }
+
+            if (navigation.equals("nav_explore")){
+
+                RecipesFragment recipesFragment = new RecipesFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, recipesFragment, RecipesFragment.class.getSimpleName())
+                        .commit();
+
+            } else if (navigation.equals("nav_favorites")){
+
+                FavoritesFragment favoritesFragment = new FavoritesFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, favoritesFragment)
+                        .addToBackStack(FavoritesFragment.class.getSimpleName())
+                        .commit();
+
+            } else if (navigation.equals("nav_about")){
+
+                AboutFragment aboutFragment = new AboutFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, aboutFragment)
+                        .addToBackStack(AboutFragment.class.getSimpleName())
+                        .commit();
+            }
+
+            drawer.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override

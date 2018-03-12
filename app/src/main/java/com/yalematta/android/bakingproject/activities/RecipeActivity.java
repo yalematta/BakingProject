@@ -1,5 +1,6 @@
 package com.yalematta.android.bakingproject.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
@@ -127,44 +128,21 @@ public class RecipeActivity extends AppCompatActivity
 
         if (id == R.id.nav_explore) {
 
-            FragmentManager fm = getSupportFragmentManager();
-            int count = fm.getBackStackEntryCount();
-            for (int i = 0; i < count; ++i) {
-                fm.popBackStackImmediate();
-            }
-
-            RecipesFragment recipesFragment = new RecipesFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, recipesFragment, RecipesFragment.class.getSimpleName())
-                    .commit();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("NAV_CLICKED", "nav_explore");
+            startActivity(intent);
 
         } else if (id == R.id.nav_favorites) {
 
-            FragmentManager fm = getSupportFragmentManager();
-            int count = fm.getBackStackEntryCount();
-            for (int i = 0; i < count; ++i) {
-                fm.popBackStackImmediate();
-            }
-
-            FavoritesFragment favoritesFragment = new FavoritesFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, favoritesFragment)
-                    .addToBackStack(FavoritesFragment.class.getSimpleName())
-                    .commit();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("NAV_CLICKED", "nav_favorites");
+            startActivity(intent);
 
         } else if (id == R.id.nav_about) {
 
-            FragmentManager fm = getSupportFragmentManager();
-            int count = fm.getBackStackEntryCount();
-            for (int i = 0; i < count; ++i) {
-                fm.popBackStackImmediate();
-            }
-
-            AboutFragment aboutFragment = new AboutFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, aboutFragment)
-                    .addToBackStack(AboutFragment.class.getSimpleName())
-                    .commit();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("NAV_CLICKED", "nav_about");
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -75,9 +75,6 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
             if (clickedStep != null) {
                 stepsPager.setCurrentItem(clickedStep.getStepId());
             }
-//            else{
-//                stepsPager.setCurrentItem(0);
-//            }
         } else {
             stepsPager.setCurrentItem(clickedStep.getStepId());
         }
