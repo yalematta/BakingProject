@@ -112,10 +112,9 @@ public class RecipeActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -153,6 +152,7 @@ public class RecipeActivity extends AppCompatActivity
     @Override
     public void onBackStackChanged() {
         int lastBackStackEntryCount = getSupportFragmentManager().getBackStackEntryCount() - 1;
+
         if (lastBackStackEntryCount == -1) {
             getSupportActionBar().setTitle(R.string.title_activity_main);
             navigationView.getMenu().getItem(0).setChecked(true);
@@ -160,5 +160,6 @@ public class RecipeActivity extends AppCompatActivity
             getSupportActionBar().setTitle(R.string.favorites);
         }
     }
+
 }
 
