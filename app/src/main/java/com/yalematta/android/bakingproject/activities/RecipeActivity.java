@@ -117,6 +117,10 @@ public class RecipeActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        if (mTwoPane) {
+            finish();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -160,6 +164,5 @@ public class RecipeActivity extends AppCompatActivity
             getSupportActionBar().setTitle(R.string.favorites);
         }
     }
-
 }
 

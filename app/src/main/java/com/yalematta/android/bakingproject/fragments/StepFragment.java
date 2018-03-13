@@ -309,10 +309,10 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if((playbackState == Player.STATE_READY) && playWhenReady){
+        if ((playbackState == Player.STATE_READY) && playWhenReady) {
             mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                     mExoPlayer.getCurrentPosition(), 1f);
-        } else if((playbackState == Player.STATE_READY)){
+        } else if ((playbackState == Player.STATE_READY)) {
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mExoPlayer.getCurrentPosition(), 1f);
         }
@@ -413,12 +413,14 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private class MySessionCallback extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
-            mExoPlayer.setPlayWhenReady(true);
+            if (mExoPlayer != null)
+                mExoPlayer.setPlayWhenReady(true);
         }
 
         @Override
         public void onPause() {
-            mExoPlayer.setPlayWhenReady(false);
+            if (mExoPlayer != null)
+                mExoPlayer.setPlayWhenReady(false);
         }
 
         @Override

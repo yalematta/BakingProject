@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
 
             if (navigation.equals("nav_explore")){
 
+                navigationView.setCheckedItem(R.id.nav_explore);
                 RecipesFragment recipesFragment = new RecipesFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, recipesFragment, RecipesFragment.class.getSimpleName())
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
             } else if (navigation.equals("nav_favorites")){
 
+                navigationView.setCheckedItem(R.id.nav_favorites);
                 FavoritesFragment favoritesFragment = new FavoritesFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, favoritesFragment)
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity
 
             } else if (navigation.equals("nav_about")){
 
+                navigationView.setCheckedItem(R.id.nav_about);
                 AboutFragment aboutFragment = new AboutFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, aboutFragment)
