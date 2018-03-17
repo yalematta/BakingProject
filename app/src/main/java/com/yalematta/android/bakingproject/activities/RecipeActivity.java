@@ -44,16 +44,13 @@ public class RecipeActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_recipe);
 
-        if (findViewById(R.id.second_frame) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
-        }
+        mTwoPane = findViewById(R.id.second_frame) != null;
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

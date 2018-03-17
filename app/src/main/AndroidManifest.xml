@@ -16,7 +16,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|screenSize|orientation">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,8 @@
 
         <activity
             android:name=".activities.RecipeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|screenSize|orientation">
 
         </activity>
 

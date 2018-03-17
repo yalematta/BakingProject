@@ -60,11 +60,9 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     //region Variables definitions
 
-    /*
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
-    */
 
     @BindView(R.id.tvDesc)
     TextView tvDesc;
@@ -114,16 +112,13 @@ public class StepFragment extends Fragment implements Player.EventListener {
         View v = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this, v);
 
-        /*
         if (savedInstanceState != null) {
             mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
             mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
             mExoPlayerFullScreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
-        */
 
-//        setRetainInstance(true);
-
+        setRetainInstance(true);
         return v;
     }
 
@@ -224,14 +219,10 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
                 mVideoSource = new ExtractorMediaSource(mediaUri, dataSourceFactory, new DefaultExtractorsFactory(), null, null);
 
-                boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
-
-                if (haveResumePosition) {
-                    mPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
-                }
+                if (mResumePosition != C.TIME_UNSET) mPlayerView.getPlayer().seekTo(mResumePosition);
 
                 mExoPlayer.prepare(mVideoSource);
-                mExoPlayer.setPlayWhenReady(false);
+                mExoPlayer.setPlayWhenReady(true);
                 mExoPlayer.addListener(this);
 
                 initDataInView();
@@ -286,7 +277,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
             }
         });
     }
-
 
     //endregion
 
@@ -381,7 +371,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         if (mPlayerView != null && mPlayerView.getPlayer() != null) {
             mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
+            mResumePosition = mPlayerView.getPlayer().getCurrentPosition();
 
             if (mExoPlayer != null) {
                 mExoPlayer.stop();
@@ -397,7 +387,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private void whenFragmentNotVisible() {
         if (mPlayerView != null && mPlayerView.getPlayer() != null) {
             mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = Math.max(0, mPlayerView.getPlayer().getContentPosition());
+            mResumePosition = mPlayerView.getPlayer().getCurrentPosition();
 
             if (mExoPlayer != null) {
                 mExoPlayer.stop();
@@ -425,7 +415,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         @Override
         public void onSkipToPrevious() {
-            mExoPlayer.seekTo(0);
+            mExoPlayer.seekTo(mResumePosition);
         }
     }
     //endregion
@@ -433,20 +423,9 @@ public class StepFragment extends Fragment implements Player.EventListener {
     @Override
     public void onResume() {
         super.onResume();
-
         whenFragmentVisible();
-
-        /*
-        if (mExoPlayerFullScreen) {
-            ((ViewGroup) mPlayerView.getParent()).removeView(mPlayerView);
-            mFullScreenDialog.addContentView(mPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_fullscreen_skrink));
-            mFullScreenDialog.show();
-        }
-        */
     }
 
-    /*
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
@@ -456,5 +435,5 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         super.onSaveInstanceState(outState);
     }
-    */
+
 }
