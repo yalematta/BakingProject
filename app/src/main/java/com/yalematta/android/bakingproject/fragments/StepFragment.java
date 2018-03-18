@@ -2,9 +2,11 @@ package com.yalematta.android.bakingproject.fragments;
 
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -60,9 +62,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     //region Variables definitions
 
-    private final String STATE_RESUME_WINDOW = "resumeWindow";
-    private final String STATE_RESUME_POSITION = "resumePosition";
-    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    private long position;
 
     @BindView(R.id.tvDesc)
     TextView tvDesc;
@@ -76,7 +76,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
     ImageView stepPicture;
 
     private Step clickedStep;
-    private Bitmap stepBitmap;
     private SimpleExoPlayer mExoPlayer;
 
     private boolean mExoPlayerFullScreen = false;
@@ -86,10 +85,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     private PlaybackStateCompat.Builder mStateBuilder;
     private static MediaSessionCompat mMediaSession;
-    private MediaSessionCompat.Token token;
 
-    private int mResumeWindow;
-    private long mResumePosition;
     private MediaSource mVideoSource;
 
     private boolean fragmentResume = false;
@@ -100,10 +96,17 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     public static final StepFragment newInstance(Step step) {
         StepFragment f = new StepFragment();
-        Bundle bdl = new Bundle(1);
+        Bundle bdl = new Bundle();
         bdl.putParcelable("CLICKED_STEP", step);
         f.setArguments(bdl);
         return f;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
     }
 
     @Override
@@ -114,13 +117,12 @@ public class StepFragment extends Fragment implements Player.EventListener {
         View v = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this, v);
 
+        position = C.TIME_UNSET;
+
         if (savedInstanceState != null) {
-            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
-            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
-            mExoPlayerFullScreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
+            position = savedInstanceState.getLong("SELECTED_POSITION", C.TIME_UNSET);
         }
 
-        setRetainInstance(true);
         return v;
     }
 
@@ -191,11 +193,10 @@ public class StepFragment extends Fragment implements Player.EventListener {
                 Uri mediaUri = Uri.parse(streamUrl);
 
                 mVideoSource = new ExtractorMediaSource(mediaUri, dataSourceFactory, new DefaultExtractorsFactory(), null, null);
-
-                if (mResumePosition != C.TIME_UNSET)
-                    mPlayerView.getPlayer().seekTo(mResumePosition);
-
                 mExoPlayer.prepare(mVideoSource);
+
+                if (position != C.TIME_UNSET) mPlayerView.getPlayer().seekTo(position);
+
                 mExoPlayer.setPlayWhenReady(true);
                 mExoPlayer.addListener(this);
 
@@ -344,10 +345,9 @@ public class StepFragment extends Fragment implements Player.EventListener {
         super.onPause();
 
         if (mPlayerView != null && mPlayerView.getPlayer() != null) {
-            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = mPlayerView.getPlayer().getCurrentPosition();
 
             if (mExoPlayer != null) {
+                position = mExoPlayer.getCurrentPosition();
                 mExoPlayer.stop();
                 mExoPlayer.release();
                 mExoPlayer = null;
@@ -360,8 +360,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     private void whenFragmentNotVisible() {
         if (mPlayerView != null && mPlayerView.getPlayer() != null) {
-            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = mPlayerView.getPlayer().getCurrentPosition();
 
             if (mExoPlayer != null) {
                 mExoPlayer.stop();
@@ -389,7 +387,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
         @Override
         public void onSkipToPrevious() {
-            mExoPlayer.seekTo(mResumePosition);
+            if (position != C.TIME_UNSET) mExoPlayer.seekTo(position);
         }
     }
     //endregion
@@ -402,12 +400,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
-        outState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
-        outState.putLong(STATE_RESUME_POSITION, mResumePosition);
-        outState.putBoolean(STATE_PLAYER_FULLSCREEN, mExoPlayerFullScreen);
-
-        super.onSaveInstanceState(outState);
+        outState.putLong("SELECTED_POSITION", position);
     }
 
 }

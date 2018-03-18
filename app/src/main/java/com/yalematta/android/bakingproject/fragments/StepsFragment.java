@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yalematta.android.bakingproject.activities.MainActivity;
-import com.yalematta.android.bakingproject.activities.RecipeActivity;
 import com.yalematta.android.bakingproject.adapters.StepsAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.entities.Step;
@@ -27,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static java.security.AccessController.getContext;
 
 /**
  * Created by yalematta on 1/8/18.
@@ -36,7 +33,6 @@ import static java.security.AccessController.getContext;
 public class StepsFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private Step clickedStep;
-    private boolean tabletSize;
     private Recipe clickedRecipe;
     private StepsAdapter stepsAdapter;
 
@@ -51,19 +47,30 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
     @BindView(R.id.llPrevious)
     LinearLayout llPrevious;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_steps, container, false);
-        ButterKnife.bind(this, v);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
         clickedRecipe = bundle.getParcelable("CLICKED_RECIPE");
         clickedStep = bundle.getParcelable("CLICKED_STEP");
 
         List<Fragment> fragments = getFragments();
-        stepsAdapter = new StepsAdapter(getActivity().getSupportFragmentManager(), fragments);
+        this.stepsAdapter = new StepsAdapter(getActivity().getSupportFragmentManager(), fragments);
+
+        setRetainInstance(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_steps, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+
         stepsPager.setAdapter(stepsAdapter);
         stepsPager.beginFakeDrag();
 
@@ -73,21 +80,11 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
-        if (tabletSize) {
-            if (clickedStep != null) {
-                stepsPager.setCurrentItem(clickedStep.getStepId());
-            }
-        } else {
+
+        if (clickedStep != null) {
             stepsPager.setCurrentItem(clickedStep.getStepId());
         }
 
-        setRetainInstance(true);
-
-        if (getContext() != null) {
-            tabletSize = getResources().getBoolean(R.bool.isTablet);
-        }
-
-        return v;
     }
 
     private List<Fragment> getFragments() {

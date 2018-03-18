@@ -16,12 +16,9 @@ import android.widget.FrameLayout;
 import com.crashlytics.android.Crashlytics;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.entities.Recipe;
-import com.yalematta.android.bakingproject.fragments.AboutFragment;
 import com.yalematta.android.bakingproject.fragments.FavoritesFragment;
 import com.yalematta.android.bakingproject.fragments.IngredientsFragment;
 import com.yalematta.android.bakingproject.fragments.RecipeFragment;
-import com.yalematta.android.bakingproject.fragments.RecipesFragment;
-import com.yalematta.android.bakingproject.fragments.StepsFragment;
 
 import java.util.ArrayList;
 
@@ -42,6 +39,8 @@ public class RecipeActivity extends AppCompatActivity
 
     private Recipe clickedRecipe;
 
+    private boolean mTwoPane;
+
     private boolean tabletSize;
 
     @Override
@@ -61,6 +60,8 @@ public class RecipeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        mTwoPane = findViewById(R.id.second_frame) != null;
+
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -76,7 +77,7 @@ public class RecipeActivity extends AppCompatActivity
         if (null == savedInstanceState) {
             // set your initial fragment object
 
-            if (tabletSize) {
+            if (mTwoPane) {
                 RecipeFragment recipeFragment = new RecipeFragment();
                 recipeFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
@@ -106,6 +107,7 @@ public class RecipeActivity extends AppCompatActivity
                 tabletSize = getResources().getBoolean(R.bool.isTablet);
             }
         }
+
     }
 
     @Override
