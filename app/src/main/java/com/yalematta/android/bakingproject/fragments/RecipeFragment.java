@@ -45,6 +45,7 @@ import butterknife.OnClick;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.CLIPBOARD_SERVICE;
+import static java.security.AccessController.getContext;
 
 /**
  * Created by yalematta on 1/7/18.
@@ -61,6 +62,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
     private Map<Integer, Object> map;
     private RecipeAdapter adapter;
     private Recipe clickedRecipe;
+    private boolean tabletSize;
 
     public static String recipeTitle = "Add your ingredients";
     public static List<Ingredient> ingredientsModelList = new ArrayList<>();
@@ -104,6 +106,10 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         setHasOptionsMenu(true);
 
         setRetainInstance(true);
+
+        if (getContext() != null) {
+            tabletSize = getResources().getBoolean(R.bool.isTablet);
+        }
 
         return v;
     }
@@ -210,7 +216,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         args.putParcelable("CLICKED_RECIPE", clickedRecipe);
         args.putParcelable("CLICKED_STEP", (Parcelable) map.get(clickedStepIndex));
 
-        if (!RecipeActivity.mTwoPane) {
+        if (!tabletSize) {
             StepsFragment stepsFragment = new StepsFragment();
             stepsFragment.setArguments(args);
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -233,7 +239,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ListStepCl
         Bundle args = new Bundle();
         args.putParcelableArrayList("INGREDIENTS", (ArrayList<? extends Parcelable>) clickedRecipe.getIngredients());
 
-        if (!RecipeActivity.mTwoPane) {
+        if (!tabletSize) {
             IngredientsFragment ingredientsFragment = new IngredientsFragment();
             ingredientsFragment.setArguments(args);
             getActivity().getSupportFragmentManager().beginTransaction()

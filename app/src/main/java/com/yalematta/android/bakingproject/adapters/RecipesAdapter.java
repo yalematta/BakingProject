@@ -5,13 +5,11 @@ import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
 
@@ -23,12 +21,12 @@ import java.util.List;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
 
-    private Context mContext;
+    private final RequestManager glide;
     private List<Recipe> recipeList;
     private final ListRecipeClickListener clickListener;
 
-    public RecipesAdapter(Context mContext, List<Recipe> recipeList, ListRecipeClickListener clickListener) {
-        this.mContext = mContext;
+    public RecipesAdapter(RequestManager glide, List<Recipe> recipeList, ListRecipeClickListener clickListener) {
+        this.glide = glide;
         this.recipeList = recipeList;
         this.clickListener = clickListener;
     }
@@ -51,7 +49,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
           holder.heart.setImageResource(R.drawable.ic_favorite_empty);
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(recipe.getImage()).placeholder(R.drawable.placeholder).into(holder.thumbnail);
+        glide.load(recipe.getImage()).placeholder(R.drawable.placeholder).into(holder.thumbnail);
 
     }
 

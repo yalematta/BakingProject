@@ -1,15 +1,10 @@
 package com.yalematta.android.bakingproject.fragments;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.yalematta.android.bakingproject.BuildConfig;
@@ -44,11 +40,9 @@ import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
 import com.yalematta.android.bakingproject.entities.Recipe;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.database.AppDatabase;
-import com.yalematta.android.bakingproject.utils.AppUtilities;
 import com.yalematta.android.bakingproject.utils.GridSpacingItemDecoration;
 import com.yalematta.android.bakingproject.viewmodels.RecipeListViewModel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -172,7 +166,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
 
         if (getActivity() != null) {
 
-            adapter = new RecipesAdapter(getContext(), new ArrayList<Recipe>(), this);
+            adapter = new RecipesAdapter(Glide.with(this), new ArrayList<Recipe>(), this);
 
             final RecyclerView.LayoutManager mLayoutManager;
 

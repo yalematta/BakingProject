@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.yalematta.android.bakingproject.R;
 import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.activities.RecipeActivity;
@@ -116,7 +117,7 @@ public class FavoritesFragment extends Fragment implements RecipesAdapter.ListRe
 
         if (getActivity() != null) {
 
-            adapter = new RecipesAdapter(this.getContext(), new ArrayList<Recipe>(), this);
+            adapter = new RecipesAdapter(Glide.with(this), new ArrayList<Recipe>(), this);
 
             final RecyclerView.LayoutManager mLayoutManager;
 

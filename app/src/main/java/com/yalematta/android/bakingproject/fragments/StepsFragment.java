@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static java.security.AccessController.getContext;
 
 /**
  * Created by yalematta on 1/8/18.
@@ -35,6 +36,7 @@ import butterknife.OnClick;
 public class StepsFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private Step clickedStep;
+    private boolean tabletSize;
     private Recipe clickedRecipe;
     private StepsAdapter stepsAdapter;
 
@@ -71,7 +73,7 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(clickedRecipe.getName());
 
-        if (RecipeActivity.mTwoPane) {
+        if (tabletSize) {
             if (clickedStep != null) {
                 stepsPager.setCurrentItem(clickedStep.getStepId());
             }
@@ -80,6 +82,10 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
         }
 
         setRetainInstance(true);
+
+        if (getContext() != null) {
+            tabletSize = getResources().getBoolean(R.bool.isTablet);
+        }
 
         return v;
     }
@@ -114,15 +120,11 @@ public class StepsFragment extends Fragment implements ViewPager.OnPageChangeLis
     }
 
     private boolean isLastPage(int position) {
-        if (position == clickedRecipe.getSteps().size() - 1)
-            return true;
-        return false;
+        return position == clickedRecipe.getSteps().size() - 1;
     }
 
     private boolean isFirstPage(int position) {
-        if (position == 0)
-            return true;
-        return false;
+        return position == 0;
     }
 
     //region addOnPageChangeListener for ViewPager

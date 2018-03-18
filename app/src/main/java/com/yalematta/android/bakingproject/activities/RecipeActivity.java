@@ -27,6 +27,8 @@ import java.util.ArrayList;
 
 import io.fabric.sdk.android.Fabric;
 
+import static java.security.AccessController.getContext;
+
 /**
  * Created by yalematta on 3/11/18.
  */
@@ -38,9 +40,9 @@ public class RecipeActivity extends AppCompatActivity
 
     public static NavigationView navigationView;
 
-    public static boolean mTwoPane;
-
     private Recipe clickedRecipe;
+
+    private boolean tabletSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,6 @@ public class RecipeActivity extends AppCompatActivity
 
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_recipe);
-
-        mTwoPane = findViewById(R.id.second_frame) != null;
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,7 +76,7 @@ public class RecipeActivity extends AppCompatActivity
         if (null == savedInstanceState) {
             // set your initial fragment object
 
-            if (mTwoPane) {
+            if (tabletSize) {
                 RecipeFragment recipeFragment = new RecipeFragment();
                 recipeFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
@@ -101,6 +101,10 @@ public class RecipeActivity extends AppCompatActivity
             }
 
             getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+            if (getContext() != null) {
+                tabletSize = getResources().getBoolean(R.bool.isTablet);
+            }
         }
     }
 
@@ -115,7 +119,7 @@ public class RecipeActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-        if (mTwoPane) {
+        if (tabletSize) {
             finish();
         }
     }
