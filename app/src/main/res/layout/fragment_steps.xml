@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:weightSum="@dimen/fragment_steps_weight">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpSteps"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"/>
+        android:layout_weight="@dimen/viewpager_weight"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:weightSum="3.5">
+        android:weightSum="@dimen/navigation_total_weight">
 
         <LinearLayout
             android:id="@+id/llPrevious"
@@ -24,12 +24,12 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_weight="1.75">
+            android:layout_weight="@dimen/navigation_weight">
 
             <ImageView
                 android:src="@drawable/ic_arrow_left"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+                android:layout_height="@dimen/arrow_height" />
 
             <TextView
                 android:id="@+id/tvPrevious"
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="1.75"
+            android:layout_weight="@dimen/navigation_weight"
             android:gravity="end|center_vertical">
 
             <TextView
@@ -62,7 +62,7 @@
             <ImageView
                 android:src="@drawable/ic_arrow_right"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+                android:layout_height="@dimen/arrow_height" />
 
         </LinearLayout>
 

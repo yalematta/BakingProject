@@ -33,8 +33,14 @@ android {
         }
     }
     buildTypes {
+
+        debug {
+            buildConfigField 'String', 'ENDPOINT', EndPoint
+        }
+
         release {
             minifyEnabled false
+            buildConfigField 'String', 'ENDPOINT', EndPoint
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

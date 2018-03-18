@@ -23,9 +23,18 @@
     <dimen name="ingredients_title">20dp</dimen>
     <dimen name="navigation_title">15dp</dimen>
 
-    <!--
-Refer to App Widget Documentation for margin information
-http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    <dimen name="arrow_height">30dp</dimen>
+    <dimen name="navigation_weight">1.75</dimen>
+    <dimen name="viewpager_weight">9</dimen>
+    <dimen name="fragment_steps_weight">10</dimen>
+    <dimen name="navigation_total_weight">3.5</dimen>
+
+    <dimen name="description_padding">10dp</dimen>
+    <dimen name="description_text_size">16sp</dimen>
+    <dimen name="short_description_text_size">18sp</dimen>
+
+    <!-- Refer to App Widget Documentation for margin information
+        http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
 </resources>

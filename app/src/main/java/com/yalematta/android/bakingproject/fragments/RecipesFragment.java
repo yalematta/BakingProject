@@ -37,6 +37,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.yalematta.android.bakingproject.BuildConfig;
 import com.yalematta.android.bakingproject.activities.MainActivity;
 import com.yalematta.android.bakingproject.activities.RecipeActivity;
 import com.yalematta.android.bakingproject.adapters.RecipesAdapter;
@@ -62,7 +63,6 @@ import butterknife.OnClick;
 
 public class RecipesFragment extends Fragment implements RecipesAdapter.ListRecipeClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String ENDPOINT = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
     private static final String SAVED_LAYOUT_MANAGER = "SAVED_LAYOUT_MANAGER";
     private Parcelable layoutManagerSavedState;
     private RequestQueue requestQueue;
@@ -117,7 +117,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ListReci
     }
 
     private void fetchRecipes() {
-        StringRequest request = new StringRequest(Request.Method.GET, ENDPOINT, onRecipesLoaded, onRecipesError);
+        StringRequest request = new StringRequest(Request.Method.GET, BuildConfig.ENDPOINT , onRecipesLoaded, onRecipesError);
         requestQueue.add(request);
     }
 

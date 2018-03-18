@@ -27,8 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.1"
-        android:padding="10dp"
-        android:textSize="18sp"
+        android:padding="@dimen/description_padding"
+        android:textSize="@dimen/short_description_text_size"
         android:textStyle="bold|italic"/>
 
     <TextView
@@ -36,11 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.4"
-        android:padding="10dp"
-        android:textSize="16sp"
+        android:padding="@dimen/description_padding"
+        android:textSize="@dimen/description_text_size"
         android:textStyle="italic"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
+        android:paddingEnd="@dimen/description_padding"
+        android:paddingStart="@dimen/description_padding"
         android:layout_marginTop="30dp"
         android:gravity="center_horizontal"/>
 
