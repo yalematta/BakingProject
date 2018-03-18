@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -72,6 +72,8 @@ public class StepFragment extends Fragment implements Player.EventListener {
     FrameLayout mediaFrame;
     @BindView(R.id.playerView)
     SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.ivPicture)
+    ImageView stepPicture;
 
     private Step clickedStep;
     private Bitmap stepBitmap;
@@ -145,38 +147,9 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     private void initDataInView() {
 
-        /*
         if (!TextUtils.isEmpty(clickedStep.getThumbnailURL())) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    Looper.prepare();
-                    try {
-                        stepBitmap = Glide.
-                                with(getContext()).
-                                load(clickedStep.getThumbnailURL()).
-                                asBitmap().
-                                into(100, 100). // Width and height
-                                get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void dummy) {
-                    if (null != stepBitmap) {
-                        // The full bitmap should be available here
-                        mPlayerView.setDefaultArtwork(stepBitmap);
-                        Log.d("Glide", "Image loaded");
-                    }
-                }
-            }.execute();
+            Glide.with(getContext()).load(clickedStep.getThumbnailURL()).into(stepPicture);
         }
-        */
 
         if (TextUtils.isEmpty(clickedStep.getVideoURL())) {
             mediaFrame.setVisibility(View.GONE);
@@ -219,7 +192,8 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
                 mVideoSource = new ExtractorMediaSource(mediaUri, dataSourceFactory, new DefaultExtractorsFactory(), null, null);
 
-                if (mResumePosition != C.TIME_UNSET) mPlayerView.getPlayer().seekTo(mResumePosition);
+                if (mResumePosition != C.TIME_UNSET)
+                    mPlayerView.getPlayer().seekTo(mResumePosition);
 
                 mExoPlayer.prepare(mVideoSource);
                 mExoPlayer.setPlayWhenReady(true);
