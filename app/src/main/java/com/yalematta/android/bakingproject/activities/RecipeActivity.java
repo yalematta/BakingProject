@@ -22,6 +22,7 @@ import com.yalematta.android.bakingproject.fragments.RecipeFragment;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import io.fabric.sdk.android.Fabric;
 
 import static java.security.AccessController.getContext;
@@ -33,15 +34,13 @@ import static java.security.AccessController.getContext;
 public class RecipeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
-    public static FrameLayout secondFrame;
-
-    public static NavigationView navigationView;
-
     private Recipe clickedRecipe;
-
+    private boolean tabletSize;
     private boolean mTwoPane;
 
-    private boolean tabletSize;
+    public static @BindView(R.id.nav_view) NavigationView navigationView;
+    public static @BindView(R.id.second_frame) FrameLayout secondFrame;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,6 @@ public class RecipeActivity extends AppCompatActivity
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_recipe);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -62,11 +60,8 @@ public class RecipeActivity extends AppCompatActivity
 
         mTwoPane = findViewById(R.id.second_frame) != null;
 
-        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
-
-        secondFrame = findViewById(R.id.second_frame);
 
         clickedRecipe = getIntent().getParcelableExtra("CLICKED_RECIPE");
         Bundle args = new Bundle();
